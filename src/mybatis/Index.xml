@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.IndexMapper">
+    <!--查询banner图片轮播数据-->
+    <select id="selectDynamicManagement" resultType="DynamicManagement">
+       select * from tb_dynamic_management where placedTop = 1 and releaseMarks = 1 and releaseUnit is null and base is null and region is null and socialGroups = '' and dynamicClassification = '' order by placedTop desc ,sorting asc
+    </select>
+    <!--查询二维码-->
+    <select id="selectQrCodeWeiXin" resultType="java.lang.String">
+        select qrCodeURL from tb_qrcode_management where category like '%微信%'
+    </select>
+    <select id="selectQrCodeWeiBo" resultType="java.lang.String">
+        select qrCodeURL from tb_qrcode_management where category like '%微博%'
+    </select>
+    <!--部委中的内容-->
+    <select id="selectBuWei" resultType="DynamicManagement">
+        select * from tb_dynamic_management where placedTop = 1 and releaseMarks =1 and releaseUnit is not null and base is null and region is null and socialGroups = '' and dynamicClassification = '' order by placedTop desc ,sorting asc
+    </select>
+    <!--热门信息-->
+    <select id="selectShouLu" resultType="ImageManagement">
+        select * from tb_image_management where placedTop = 1 and type like '%首页-创响中国跳转%' order by sorting asc
+    </select>
+    <!--地方信息-->
+    <select id="selectDiFang" resultType="DynamicManagement">
+        select * from tb_dynamic_management where placedTop = 1 and releaseMarks =1 and region is not null and releaseUnit is null and base is null and socialGroups = '' and dynamicClassification = '' order by placedTop desc ,sorting asc
+    </select>
+    <!--社会团体信息-->
+    <select id="selectTuanTi" resultType="DynamicManagement">
+        select * from tb_dynamic_management where placedTop = 1 and releaseMarks =1 and socialGroups &lt;&gt; '' and releaseUnit is null and base is null and region is null and dynamicClassification = '' order by placedTop desc ,sorting asc
+    </select>
+    <!--基地信息-->
+    <select id="selectJiDi" resultType="DynamicManagement">
+        select * from tb_dynamic_management where placedTop = 1 and releaseMarks =1 and base is not null and releaseUnit is null and socialGroups = '' and dynamicClassification = '' order by placedTop desc ,sorting asc
+    </select>
+    <!--全面创新改革实验-->
+    <select id="selectChuangXinShiYan" resultType="ComprehensiveInnovationExperiment">
+        select * from tb_comprehensive_innovation_experiment where placedTop = 1 and reportMarks =1 order by placedTop desc ,sorting asc ,reportDate desc
+    </select>
+    <!--战略性新兴产业-->
+    <select id="selectXinXingChanYe" resultType="EmergingIndustryManagement">
+        select * from tb_emerging_industry_management where placedTop = 1 and reportMarks =1 order by placedTop desc ,sorting asc ,reportDate desc
+    </select>
+
+    <!--活动跟踪-->
+    <select id="selectHuoDongGengZong" resultType="MediaManagement" parameterType="java.lang.String">
+        select * from tb_media_management where businessTypes like "%"#{type}"%" and placedTop = 1 order by sorting asc ,placedTop desc
+    </select>
+    <!--基地图片轮播图-->
+    <select id="selectJiDiLunBoTu" resultType="DemonstrationBaseManagement">
+        select * from tb_demonstration_base_management where placedTop = 1 order by placedTop desc ,sorting
+    </select>
+    <!--基地动态信息-->
+    <select id="selectJiDiDongTaiXingXi" resultType="DynamicManagement" parameterType="DynamicManagement">
+    select d.*,batch baseBatch,type baseType from tb_dynamic_management d,tb_demonstration_base_management b
+    <where>
+        base is not null and releaseMarks = 1 and d.placedTop = 1 and base = b.id
+        <if test="baseBatch!=null">
+            and batch like "%"#{baseBatch}"%"
+        </if>
+        <if test="baseType!=null">
+            and type like "%"#{baseType}"%"
+        </if>
+    </where>
+    order by reportDate desc limit #{start},#{pageSize}
+    </select>
+    <!--查询基地动态信息的总数-->
+    <select id="selectJiDiDongTaiXingXiCount" parameterType="DynamicManagement" resultType="int">
+        select count(*) from (
+        select d.*,batch baseBatch,type baseType from tb_dynamic_management d,tb_demonstration_base_management b
+        <where>
+            base is not null and releaseMarks = 1 and base = b.id
+            <if test="baseBatch!=null">
+                and batch like "%"#{baseBatch}"%"
+            </if>
+            <if test="baseType!=null">
+                and type like "%"#{baseType}"%"
+            </if>
+        </where>
+        order by reportDate desc) as count
+    </select>
+    <!--基地库信息-->
+    <select id="selectJiDiKuXingXi" parameterType="DemonstrationBaseManagement" resultType="DemonstrationBaseManagement">
+        select * from tb_demonstration_base_management
+        <where>
+             placedTop = 1
+            <if test="batch!=null">
+                and batch like "%"#{batch}"%"
+            </if>
+            <if test="type!=null">
+                and type like "%"#{type}"%"
+            </if>
+            <if test="area!=null">
+                and area = #{area}
+            </if>
+            <if test="baseIds!=null">
+                <foreach collection="baseIds" item="id" open="and id in (" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by sorting limit #{start},#{pageSize}
+    </select>
+    <!--通过基地的id查询动态管理数据库的信息-->
+    <select id="selectDongTaiXingXiByBaseId" parameterType="int" resultType="DynamicManagement">
+        select * from tb_dynamic_management where base = #{baseId} limit 0,2
+    </select>
+    <!--查询基地库动态信息数量-->
+    <select id="selectJiDiKuDongTaiXingXiCount" resultType="int" parameterType="DemonstrationBaseManagement">
+      select count(*) from (
+        select * from tb_demonstration_base_management
+        <where>
+             placedTop = 1
+            <if test="batch!=null">
+                and batch like "%"#{batch}"%"
+            </if>
+            <if test="type!=null">
+                and type like "%"#{type}"%"
+            </if>
+            <if test="area!=null">
+                and area = #{area}
+            </if>
+            <if test="baseIds!=null">
+                <foreach collection="baseIds" item="id" open="and id in (" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by sorting
+        ) as allcounts
+    </select>
+    <!--添加建言信息-->
+    <insert id="insertMakeRecommendations" parameterType="MakeRecommendations">
+        insert into tb_make_recommendations (name, unit, telNum, email, title, content, time, state) values (#{name},#{unit},#{telNum},#{email},#{title},#{content},#{time},0);
+    </insert>
+    <!--遍历建言须知信息-->
+    <select id="listPageSuggestionsAndGuidelines" resultType="SuggestionsAndGuidelines" parameterType="SuggestionsAndGuidelines">
+         select * from tb_suggestions_and_guidelines
+    </select>
+    <!--查询时间轴信息-->
+    <select id="selectTimeLineInfo" resultType="TimelineMaintenance">
+        select * from tb_timeline_maintenance
+    </select>
+    <!--通过type查询办事指南信息-->
+    <select id="selectGuideManagementInfo" parameterType="int" resultType="GuideManagement">
+        select * from tb_guide_management where type = #{typeId} order by reportDate desc
+    </select>
+    <!--首页政策发布中的部委-->
+    <select id="selectPolicyIssuedByReportUnit" resultType="PolicyIssued">
+        select * from tb_policy_issued where reportUnit is not null and region = '' order by reportMarks desc ,reportDate desc ,placedTop desc ,sorting
+    </select>
+    <!--首页政策发布中的地方-->
+    <select id="selectPolicyIssuedByRegion" resultType="PolicyIssued">
+        select * from tb_policy_issued where region != '' order by reportMarks desc ,reportDate desc ,placedTop desc ,sorting
+    </select>
+    <!--政策点击量最多的数据降序-->
+    <select id="selectPolicyIssuedByPageView" resultType="PolicyIssued">
+        select * from tb_policy_issued order by pageView desc
+    </select>
+    <!--活动跟踪创想中国信息-->
+    <select id="selectHuoDongGengZongCXZG" resultType="ActivityManagement">
+        select * from tb_activity_management where type like '%创响中国%' and reportMarks = 1 and placedTop = 1 order by sorting ,reportDate desc
+    </select>
+    <!--活动跟踪双创周信息-->
+    <select id="selectHuoDongGengZongSCZ" resultType="ActivityManagement">
+        select * from tb_activity_management where type not like '%创响中国%' and reportMarks = 1 and placedTop = 1 order by sorting ,reportDate desc
+    </select>
+    <!--活动跟踪查询banner图片-->
+    <select id="selectHuoDongGenZongBanner" resultType="ImageManagement">
+        select * from tb_image_management where type like '%双创活动周%' and placedTop = 1 order by sorting
+    </select>
+    <!--通过type查询活动类别的信息-->
+    <select id="selectActivityCategoryManagementByType" resultType="ActivityCategoryManagement" parameterType="ActivityCategoryManagement">
+        select a.*,r.name areaName from tb_activity_category_management a,tb_regional_data_maintenance r
+        <where>
+            initiateMode = 1 and a.area = r.id
+             <if test="type!=null">
+                 and type like "%"#{type}"%"
+             </if>
+         </where>
+         order by reportTime desc  limit #{start},#{pageSize}
+    </select>
+    <!--通过type查询活动类别的数量-->
+    <select id="selectActivityCategoryManagementByTypeCount" parameterType="ActivityCategoryManagement" resultType="int">
+      select count(*) from (
+            select * from tb_activity_category_management
+            <where>
+                initiateMode = 1
+                <if test="type!=null">
+                    and type like "%"#{type}"%"
+                </if>
+            </where>
+            order by reportTime desc
+        ) as allcounts
+    </select>
+    <!--查询动态管理数据库中的type为政策动态的信息 用于政策动态页面顶部-->
+    <select id="selectDynamicManagementByTypeZCDT" resultType="DynamicManagement">
+        select * from tb_dynamic_management where dynamicClassification like '%政策动态%' and placedTop = 1 and releaseMarks = 1 order by  sorting
+    </select>
+    <!--查询所有地区信息-->
+    <select id="selectAllRegionList" resultType="RegionalDataMaintenance">
+        select * from tb_regional_data_maintenance;
+    </select>
+    <!--查询动态管理信息通过政策动态内的动态点击(所属地区 所属单位 所属基地)-->
+    <select id="selectDynamicManagementByZCDTClick" parameterType="DynamicManagement" resultType="DynamicManagement">
+        select * from tb_dynamic_management
+        <where>
+            placedTop = 1 and releaseMarks = 1 and dynamicClassification like '%政策动态%'
+            <if test="region!=null">
+                and region = #{region}
+            </if>
+            <if test="base!=null">
+                and base is not null
+            </if>
+            <if test="releaseUnit!=null">
+                and releaseUnit is not null
+            </if>
+        </where>
+        order by sorting limit #{start},#{pageSize}
+    </select>
+    <!--查询动态管理信息通过政策动态内的动态点击信息的总数-->
+    <select id="selectDynamicManagementByZCDTClickCounts" parameterType="DynamicManagement" resultType="int">
+        select count(*) from (
+        select * from tb_dynamic_management
+        <where>
+             releaseMarks = 1 and placedTop = 1 and dynamicClassification like '%政策动态%'
+            <if test="region!=null">
+                and region = #{region}
+            </if>
+            <if test="base!=null">
+                and base is not null
+            </if>
+            <if test="releaseUnit!=null">
+                and releaseUnit is not null
+            </if>
+        </where>
+        order by sorting
+        ) as allcounts
+    </select>
+    <!--通过基地名称查询基地id-->
+    <select id="selectDemonstrationBaseManagementByBaseName" resultType="int" parameterType="string">
+        select id from tb_demonstration_base_management where name like "%"#{name}"%";
+    </select>
+    <!--查询所有行业信息-->
+    <select id="selectAllIndustryList" resultType="IndustryDataMaintenance">
+        select * from tb_industry_data_maintenance
+    </select>
+    <!--查询所有创业人群信息-->
+    <select id="selectAllEntrepreneurshipGroupMaintenanceList" resultType="EntrepreneurshipGroupMaintenance">
+        select * from tb_entrepreneurship_group_maintenance
+    </select>
+    <!--查询所有政策分类信息-->
+    <select id="selectAllPolicyClassificationMaintenance" resultType="PolicyClassificationMaintenance">
+        select * from tb_policy_classification_maintenance
+    </select>
+    <!--通过前端查询条件查询政策发布信息-->
+    <select id="selectPolicyIssuedByZCCXClick" parameterType="PolicyIssued" resultType="PolicyIssued">
+        select * from tb_policy_issued
+        <where>
+            placedTop = 1 and reportMarks = 1
+            <if test="postShopName!=null">
+                and postShopName like "%"#{postShopName}"%"
+            </if>
+            <if test="name!=null">
+                and name like "%"#{name}"%" or content like "%"#{name}"%" or policyIntroduction like "%"#{name}"%"
+            </if>
+            <if test="reportUnit==0">
+                and reportUnit is not null and reportUnit !=''
+            </if>
+            <if test="region!=null">
+                and region like "%"#{region}"%"
+            </if>
+            <if test="policyClassification!=null">
+                and policyClassification like "%"#{policyClassification}"%"
+            </if>
+            <if test="businessPeople!=null">
+                and businessPeople like "%"#{businessPeople}"%"
+            </if>
+            <if test="industry!=null">
+                and industry like "%"#{industry}"%"
+            </if>
+            <if test="reportUnit!=null and reportUnit!=0">
+                and reportUnit like "%"#{reportUnit}"%"
+            </if>
+            <if test="reportDateStart!=null">
+                and reportDate&gt;=#{reportDateStart}
+            </if>
+            <if test="reportDateEnd!=null">
+                and reportDate&lt;=#{reportDateEnd}
+            </if>
+        </where>
+        order by reportDate desc ,sorting asc limit #{start},#{pageSize}
+    </select>
+    <!--通过前端查询条件查询政策发布信息的总数-->
+    <select id="selectPolicyIssuedByZCCXClickCounts" resultType="int" parameterType="PolicyIssued">
+        select count(*) from
+        (
+        select * from tb_policy_issued
+        <where>
+            placedTop = 1 and reportMarks = 1
+            <if test="postShopName!=null">
+                and postShopName like "%"#{postShopName}"%"
+            </if>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="content!=null">
+                and content like "%"#{content}"%"
+            </if>
+            <if test="policyIntroduction!=null">
+                and policyIntroduction like "%"#{policyIntroduction}"%"
+            </if>
+            <if test="reportUnit==0">
+                and reportUnit is not null and reportUnit !=''
+            </if>
+            <if test="region!=null">
+                and region like "%"#{region}"%"
+            </if>
+            <if test="policyClassification!=null">
+                and policyClassification like "%"#{policyClassification}"%"
+            </if>
+            <if test="businessPeople!=null">
+                and businessPeople like "%"#{businessPeople}"%"
+            </if>
+            <if test="industry!=null">
+                and industry like "%"#{industry}"%"
+            </if>
+            <if test="reportUnit!=null and reportUnit!=0">
+                and reportUnit like "%"#{reportUnit}"%"
+            </if>
+        </where>
+        order by reportDate desc ,sorting asc
+        ) as allcounts
+    </select>
+    <!--通过区域id查询区域name-->
+    <select id="selectRegionNameById" parameterType="int" resultType="string">
+        select name from tb_regional_data_maintenance where id = #{id}
+    </select>
+    <!--通过政策分类id查询政策分类name-->
+    <select id="selectPolicyClassificationById" parameterType="int" resultType="string">
+        select name from tb_policy_classification_maintenance where id = #{id}
+    </select>
+    <!--通过创业人群id查询创业人群name-->
+    <select id="selectBusinessPeopleById" resultType="string" parameterType="int">
+        select name from tb_entrepreneurship_group_maintenance where id = #{id}
+    </select>
+    <!--通过行业id查询行业name-->
+    <select id="selectIndustryById" parameterType="int" resultType="string">
+        select name from tb_industry_data_maintenance where id = #{id}
+    </select>
+    <!--查询政策发布按周度点击量排序-->
+    <select id="selectPolicyIssuedByWeeklyPageView" resultType="PolicyIssued">
+        select * from tb_policy_issued order by weeklyPageView desc
+    </select>
+    <!--查询政策发布按月度点击量排序-->
+    <select id="selectPolicyIssuedByMonthlyPageView" resultType="PolicyIssued">
+        select * from tb_policy_issued order by monthlyPageView desc
+    </select>
+    <!--查询政策发布按季度点击量排序-->
+    <select id="selectPolicyIssuedByQuarterPageView" resultType="PolicyIssued">
+        select * from tb_policy_issued order by quarterPageView desc
+    </select>
+    <!--查询政策发布按年度点击量排序-->
+    <select id="selectPolicyIssuedByAnnualPageView" resultType="PolicyIssued">
+        select * from tb_policy_issued order by annualPageView desc
+    </select>
+    <!--通过id查询动态详情-->
+    <select id="getDynamicManagementInfoById" resultType="DynamicManagement" parameterType="int">
+        select * from tb_dynamic_management where id = #{id}
+    </select>
+    <!--通过id查询该动态的页面点击量-->
+    <select id="getDynamicManagementPageViewsById" parameterType="int" resultType="int">
+        select pageViews from tb_dynamic_management where id = #{id}
+    </select>
+    <!--通过id修改动态的页面点击量-->
+    <update id="updateDynamicManagementPageViewsById" parameterType="DynamicManagement">
+        update tb_dynamic_management set pageViews = #{pageViews} where id = #{id}
+    </update>
+    <!--通过id查询政策详情-->
+    <select id="getPolicyIssuedInfoById" resultType="PolicyIssued" parameterType="int">
+        select * from tb_policy_issued where id = #{id}
+    </select>
+    <!--通过id查询该政策的页面点击量-->
+    <select id="getPolicyIssuedPageViewsById" parameterType="int" resultType="int">
+        select pageView from tb_policy_issued where id = #{id}
+    </select>
+    <!--通过id修改政策的页面点击量-->
+    <update id="updatePolicyIssuedPageViewsById" parameterType="PolicyIssued">
+        update tb_policy_issued set pageView = #{pageView} where id = #{id}
+    </update>
+    <!--查询所有政策信息-->
+    <select id="getAllPolicyIssuedInfo" resultType="PolicyIssued">
+        select * from tb_policy_issued
+    </select>
+    <!--将月浏览量清零-->
+    <update id="updatePolicyIssuedMonthlyPageView" parameterType="int">
+        update tb_policy_issued set monthlyPageView = 0 where id = #{id}
+    </update>
+    <!--将季度浏览量清零-->
+    <update id="updatePolicyIssuedQuarterPageView" parameterType="int">
+        update tb_policy_issued set quarterPageView = 0 where id = #{id}
+    </update>
+    <!--将年浏览量清零-->
+    <update id="updatePolicyIssuedAnnualPageView" parameterType="int">
+        update tb_policy_issued set annualPageView = 0 where id = #{id}
+    </update>
+    <!--将周浏览量清零-->
+    <update id="updatePolicyIssuedWeeklyPageView" parameterType="int">
+        update tb_policy_issued set weeklyPageView = 0 where id = #{id}
+    </update>
+</mapper>

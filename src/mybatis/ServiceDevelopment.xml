@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.ServiceDevelopmentMapper">
+    <!--遍历办事指南管理信息-->
+    <select id="listPageGuideManagement" resultType="GuideManagement" parameterType="GuideManagement">
+        select * from tb_guide_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+        order by reportMarks desc ,reportDate desc
+    </select>
+    <!--删除办事指南管理信息-->
+    <delete id="deleteGuideManagement" parameterType="int">
+        delete from tb_guide_management where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--办事指南管理信息发布-->
+    <update id="updateGuideManagementReportMarks" parameterType="int">
+        update tb_guide_management set reportMarks = 1 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--办事指南管理信息撤销发布-->
+    <update id="updateGuideManagementCancelReportMarks" parameterType="int">
+        update tb_guide_management set reportMarks = 0 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加办事指南管理信息-->
+    <insert id="insertGuideManagement" parameterType="GuideManagement">
+        insert into tb_guide_management (id,name, introduction, source, type, reportDate, releaseTime, releasePeople, modifier, modifyTime, reportMarks, content)
+        values (#{id},#{name},#{introduction},#{source},#{type},#{reportDate},#{releaseTime},#{releasePeople},#{modifier},#{modifyTime},0,#{content});
+    </insert>
+    <!--修改办事指南管理信息-->
+    <update id="updateGuideManagement" parameterType="GuideManagement">
+        update tb_guide_management set name = #{name},introduction = #{introduction},source = #{source},type = #{type},reportDate = #{reportDate},modifyTime = #{modifyTime},modifier = #{modifier},content = #{content} where id = #{id}
+    </update>
+    <!--通过id查询办事指南管理信息-->
+    <select id="selectGuideManagementById" parameterType="int" resultType="GuideManagement">
+        select * from tb_guide_management where id = #{id}
+    </select>
+    <!--通过办事指南name查询办事指南id-->
+    <select id="selectGuideManagementIdByName" parameterType="string" resultType="int">
+        select id from tb_guide_management where id = #{id};
+    </select>
+
+    <!--遍历政府性基金和行政事业型收费查询信息-->
+    <select id="listPageFundFeeEnquiry" resultType="FundFeeEnquiry" parameterType="FundFeeEnquiry">
+        select * from tb_fund_fee_enquiry
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+        </where>
+        order by reportMarks desc ,reportTime desc
+    </select>
+    <!--删除政府性基金和行政事业型收费查询信息-->
+    <delete id="deleteFundFeeEnquiry" parameterType="int">
+        delete from tb_fund_fee_enquiry where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--政府性基金和行政事业型收费查询信息撤回发布-->
+    <update id="updateFundFeeEnquiryCancelReportMarks" parameterType="int">
+        update tb_fund_fee_enquiry set reportMarks = 0 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--修改政府性基金和行政事业型收费查询信息-->
+    <update id="updateFundFeeEnquiry" parameterType="FundFeeEnquiry">
+        update tb_fund_fee_enquiry set name = #{name},type = #{type},modifier = #{modifier},modifyTime = #{modifyTime},reportMarks = 1,fileURL = #{fileURL} where id = #{id}
+    </update>
+    <!--添加政府性基金和行政事业型收费查询信息-->
+    <insert id="insertFundFeeEnquiry" parameterType="FundFeeEnquiry">
+        insert into tb_fund_fee_enquiry (name, type, reportPeople, reportTime, modifier, modifyTime, reportMarks, fileURL) values (#{name},#{type},#{reportPeople},#{reportTime},#{modifier},#{modifyTime},1,#{fileURL});
+    </insert>
+    <!--通过id查询政府性基金和行政事业型收费查询信息-->
+    <select id="selectFundFeeEnquiryById" resultType="FundFeeEnquiry" parameterType="int">
+        select * from tb_fund_fee_enquiry where id = #{id}
+    </select>
+    <!--遍历双创税收优惠政策查询信息-->
+    <select id="listPageTaxPreferenceEnquiry" parameterType="TaxPreferenceEnquiry" resultType="TaxPreferenceEnquiry">
+        select * from tb_tax_preference_enquiry
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="phase!=null">
+                and phase = #{phase}
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+        </where>
+        order by reportMarks desc ,reportTime desc
+    </select>
+    <!--删除双创税收优惠政策查询-->
+    <delete id="deleteTaxPreferenceEnquiry" parameterType="int">
+        delete from tb_tax_preference_enquiry where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--双创税收优惠政策查询撤回发布-->
+    <update id="updateTaxPreferenceEnquiryCancelReportMarks" parameterType="int">
+        update tb_tax_preference_enquiry set reportMarks = 0 where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加双创税收优惠政策查询-->
+    <insert id="insertTaxPreferenceEnquiry" parameterType="TaxPreferenceEnquiry">
+        insert into tb_tax_preference_enquiry (name, phase, type, reportPeople, reportTime, modifier, modifyTime, reportMarks, firstTitle, firstContent, secondTitle, secondContent, thirdTitle, thirdContent, forthTitle, forthContent, fifthTitle, fifthContent) values (#{name},#{phase},#{type},#{reportPeople},#{reportTime},#{modifier},#{modifyTime},1,#{firstTitle},#{firstContent},#{secondTitle},#{secondContent},#{thirdTitle},#{thirdContent},#{forthTitle},#{forthContent},#{fifthTitle},#{fifthContent});
+    </insert>
+    <!--修改双创税收优惠政策查询-->
+   <update id="updateTaxPreferenceEnquiry" parameterType="TaxPreferenceEnquiry">
+       update tb_tax_preference_enquiry set name = #{name},phase = #{phase},type = #{type},reportMarks = 1,reportPeople = #{reportPeople},reportTime = #{reportTime},modifier = #{modifier},modifyTime = #{modifyTime},firstTitle = #{firstTitle},firstContent = #{firstContent},secondTitle = #{secondTitle},secondContent = #{secondContent},thirdContent = #{thirdContent},thirdTitle = #{thirdTitle},forthTitle = #{forthTitle},forthContent = #{forthContent},fifthTitle = #{fifthTitle},fifthContent = #{fifthContent} where id = #{id}
+   </update>
+    <!--通过id查询双创税收优惠政策查询-->
+    <select id="selectTaxPreferenceEnquiryById" parameterType="int" resultType="TaxPreferenceEnquiry">
+        select * from tb_tax_preference_enquiry where id = #{id}
+    </select>
+
+</mapper>

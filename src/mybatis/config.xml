@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.flf.entity.User" alias="User"/>
+		<typeAlias type="com.flf.entity.Page" alias="Page"/>
+		<typeAlias type="com.flf.entity.Role" alias="Role"/>
+		<typeAlias type="com.flf.entity.Menu" alias="Menu"/>
+		<typeAlias type="com.flf.entity.Student" alias="Student"/>
+		<typeAlias type="com.flf.entity.homePage.QrCodeManagement" alias="QrCodeManagement"/>
+		<typeAlias type="com.flf.entity.homePage.ImageManagement" alias="ImageManagement"/>
+		<typeAlias type="com.flf.entity.homePage.EntrepreneurshipGroupMaintenance" alias="EntrepreneurshipGroupMaintenance"/>
+		<typeAlias type="com.flf.entity.homePage.FinancialPositionManagement" alias="FinancialPositionManagement"/>
+		<typeAlias type="com.flf.entity.homePage.FinancialAdvisoryManagement" alias="FinancialAdvisoryManagement"/>
+		<typeAlias type="com.flf.entity.homePage.FinancialInstitutionManagement" alias="FinancialInstitutionManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TechnicalPositionManagement" alias="TechnicalPositionManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TechnicalAdvisoryManagement" alias="TechnicalAdvisoryManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TechnicalInstitutionManagement" alias="TechnicalInstitutionManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TalentPositionManagement" alias="TalentPositionManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TalentAdvisoryManagement" alias="TalentAdvisoryManagement"/>
+		<typeAlias type="com.flf.entity.homePage.TalentInstitutionManagement" alias="TalentInstitutionManagement"/>
+	    <typeAlias type="com.flf.entity.homePage.SiteAdvisoryManagement" alias="SiteAdvisoryManagement"/>
+        <typeAlias type="com.flf.entity.homePage.SitePositionManagement" alias="SitePositionManagement"/>
+        <typeAlias type="com.flf.entity.homePage.SiteInstitutionManagement" alias="SiteInstitutionManagement"/>
+    	<typeAlias type="com.flf.entity.homePage.PositionManagement" alias="PositionManagement"/>
+        <typeAlias type="com.flf.entity.homePage.DynamicManagement" alias="DynamicManagement"/>
+		<typeAlias type="com.flf.entity.OrganizationManagement" alias="OrganizationManagement"/>
+        <typeAlias type="com.flf.entity.homePage.ResultsShowManagement" alias="ResultsShowManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.MediaManagement" alias="MediaManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.ActivityManagement" alias="ActivityManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.MascotManagement" alias="MascotManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.ExhibitionHallManagement" alias="ExhibitionHallManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.ActivityCategoryManagement" alias="ActivityCategoryManagement"/>
+		<typeAlias type="com.flf.entity.activityManagement.GuestManagement" alias="GuestManagement"/>
+        <typeAlias type="com.flf.entity.importantEmergingIndustries.EmergingIndustryManagement" alias="EmergingIndustryManagement"/>
+		<typeAlias type="com.flf.entity.policyManagement.EcosystemMaintenance" alias="EcosystemMaintenance"/>
+		<typeAlias type="com.flf.entity.policyManagement.TimelineMaintenance" alias="TimelineMaintenance"/>
+        <typeAlias type="com.flf.entity.policyManagement.IndustryDataMaintenance" alias="IndustryDataMaintenance"/>
+        <typeAlias type="com.flf.entity.policyManagement.SubjectClassificationMaintenance" alias="SubjectClassificationMaintenance"/>
+        <typeAlias type="com.flf.entity.policyManagement.PolicyClassificationMaintenance" alias="PolicyClassificationMaintenance"/>
+        <typeAlias type="com.flf.entity.policyManagement.IndustrialParkRecommendation" alias="IndustrialParkRecommendation"/>
+		<typeAlias type="com.flf.entity.demonstrationBase.DemonstrationBaseManagement" alias="DemonstrationBaseManagement"/>
+		<typeAlias type="com.flf.entity.policyManagement.RegionalDataMaintenance" alias="RegionalDataMaintenance"/>
+		<typeAlias type="com.flf.entity.comprehensiveInnovationExperiment.ComprehensiveInnovationExperiment" alias="ComprehensiveInnovationExperiment"/>
+		<typeAlias type="com.flf.entity.importantEmergingIndustries.ImportantEmergingIndustries" alias="ImportantEmergingIndustries"/>
+		<typeAlias type="com.flf.entity.advisesManagement.MakeRecommendations" alias="MakeRecommendations"/>
+		<typeAlias type="com.flf.entity.advisesManagement.SuggestionsAndGuidelines" alias="SuggestionsAndGuidelines"/>
+		<typeAlias type="com.flf.entity.serviceDevelopment.GuideManagement" alias="GuideManagement"/>
+		<typeAlias type="com.flf.entity.serviceDevelopment.FundFeeEnquiry" alias="FundFeeEnquiry"/>
+		<typeAlias type="com.flf.entity.serviceDevelopment.TaxPreferenceEnquiry" alias="TaxPreferenceEnquiry"/>
+		<typeAlias type="com.flf.entity.policyManagement.PolicyIssued" alias="PolicyIssued"/>
+	</typeAliases>
+	
+	<plugins>
+		<plugin interceptor="com.flf.plugin.PagePlugin">
+			<property name="dialect" value="mysql"/>
+			<property name="pageSqlId" value=".*listPage.*"/>
+		</plugin>
+	</plugins>
+	
+	<mappers>
+		<mapper resource="mybatis/User.xml"/>
+		<mapper resource="mybatis/Student.xml"/>
+		<mapper resource="mybatis/Role.xml"/>
+		<mapper resource="mybatis/Menu.xml"/>
+		<mapper resource="mybatis/HomePage.xml"/>
+		<mapper resource="mybatis/PolicyManagement.xml"/>
+		<mapper resource="mybatis/ActivityManagement.xml"/>
+		<mapper resource="mybatis/ComprehensiveInnovationExperiment.xml"/>
+        <mapper resource="mybatis/ImportantEmergingIndustries.xml"/>
+		<mapper resource="mybatis/DemonstrationBase.xml"/>
+		<mapper resource="mybatis/Index.xml"/>
+		<mapper resource="mybatis/AdvisesManagement.xml"/>
+		<mapper resource="mybatis/ServiceDevelopment.xml"/>
+	</mappers>
+	
+</configuration>

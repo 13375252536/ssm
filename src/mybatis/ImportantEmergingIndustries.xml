@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.ImportantEmergingIndustriesMapper">
+    <!--遍历战略性新兴产业-->
+    <select id="listPageImportantEmergingIndustries" resultType="ImportantEmergingIndustries" parameterType="ImportantEmergingIndustries">
+        select * from tb_important_emerging_industries
+        <where>
+            <if test="type!=null">
+                and type =  #{type}
+            </if>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除战略性新兴产业-->
+    <delete id="deleteImportantEmergingIndustries" parameterType="int">
+        delete from tb_important_emerging_industries where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--战略性新兴产业置顶-->
+    <update id="updateImportantEmergingIndustriesPlacedTop" parameterType="int">
+        update tb_important_emerging_industries set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--战略性新兴产业取消置顶-->
+    <update id="updateImportantEmergingIndustriesCancelPlacedTop" parameterType="int">
+        update tb_important_emerging_industries set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--战略性新兴产业发布-->
+    <update id="updateImportantEmergingIndustriesReportMarks" parameterType="int">
+        update tb_important_emerging_industries set reportMarks = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--战略性新兴产业撤销发布-->
+    <update id="updateImportantEmergingIndustriesCancelReportMarks" parameterType="int">
+        update tb_important_emerging_industries set reportMarks = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加战略性新兴产业-->
+    <insert id="insertImportantEmergingIndustries" parameterType="ImportantEmergingIndustries">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_important_emerging_industries (type, id, name, introduction, reportDate, releaseTime, modifyTime, sorting, placedTop, reportMarks, source, content) value (#{type},#{id},#{name},#{introduction},#{reportDate},#{releaseTime},#{modifyTime},#{sorting},0,0,#{source},#{content})
+    </insert>
+    <!--修改战略性新兴产业-->
+    <update id="updateImportantEmergingIndustries" parameterType="ImportantEmergingIndustries">
+        update tb_important_emerging_industries set name = #{name},introduction = #{introduction},modifyTime = #{modifyTime},sorting = #{sorting},source = #{source},content = #{content} where id = #{id}
+    </update>
+    <!--通过id查询战略性新兴产业-->
+    <select id="selectImportantEmergingIndustriesById" parameterType="int" resultType="ImportantEmergingIndustries">
+        select * from tb_important_emerging_industries where id =#{id}
+    </select>
+    <!--通过name查询战略性新兴产业-->
+    <select id="selectImportantEmergingIndustriesByName" parameterType="ImportantEmergingIndustries" resultType="ImportantEmergingIndustries">
+        select * from tb_important_emerging_industries where name = #{name} and type = #{type}
+    </select>
+
+    <!--遍历新兴产业管理信息-->
+    <select id="listPageEmergingIndustryManagement" resultType="EmergingIndustryManagement" parameterType="EmergingIndustryManagement">
+        select * from tb_emerging_industry_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除新兴产业管理信息-->
+    <delete id="deleteEmergingIndustryManagement" parameterType="int">
+        delete from tb_emerging_industry_management where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--新兴产业管理信息置顶-->
+    <update id="updateEmergingIndustryManagementPlacedTop" parameterType="int">
+        update tb_emerging_industry_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--新兴产业管理信息取消置顶-->
+    <update id="updateEmergingIndustryManagementCancelPlacedTop" parameterType="int">
+        update tb_emerging_industry_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--新兴产业管理信息发布-->
+    <update id="updateEmergingIndustryManagementReportMarks" parameterType="int">
+        update tb_emerging_industry_management set reportMarks = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--新兴产业管理信息撤销发布-->
+    <update id="updateEmergingIndustryManagementCancelReportMarks" parameterType="int">
+        update tb_emerging_industry_management set reportMarks = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加新兴产业管理信息-->
+    <insert id="insertEmergingIndustryManagement" parameterType="EmergingIndustryManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_emerging_industry_management (id, name, introduction, reportDate, releaseTime, modifyTime, sorting, placedTop, reportMarks, source, content, type) value (#{id},#{name},#{introduction},#{reportDate},#{releaseTime},#{modifyTime},#{sorting},0,0,#{source},#{content},#{type})
+    </insert>
+    <!--修改新兴产业管理信息-->
+    <update id="updateEmergingIndustryManagement" parameterType="EmergingIndustryManagement">
+        update tb_emerging_industry_management set name = #{name},introduction = #{introduction},modifyTime = #{modifyTime},sorting = #{sorting},source = #{source},content = #{content},type = #{type} where id = #{id}
+    </update>
+    <!--通过id查询新兴产业管理信息-->
+    <select id="selectEmergingIndustryManagementById" parameterType="int" resultType="EmergingIndustryManagement">
+        select * from tb_emerging_industry_management where id =#{id}
+    </select>
+    <!--通过name查询新兴产业管理信息-->
+    <select id="selectEmergingIndustryManagementByName" parameterType="java.lang.String" resultType="EmergingIndustryManagement">
+        select * from tb_emerging_industry_management where name =#{name}
+    </select>
+
+</mapper>

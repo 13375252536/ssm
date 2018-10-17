@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="userService" class="com.flf.service.impl.UserServiceImpl">
+		<property name="userMapper" ref="userMapper"/>
+	</bean>
+
+	<bean id="studentService" class="com.flf.service.impl.StudentServiceImpl">
+		<property name="studentMapper" ref="studentMapper"/>
+	</bean>
+	<bean id="homePageService" class="com.flf.service.impl.HomePageServiceImpl">
+		<property name="homePageMapper" ref="homePageMapper"/>
+	</bean>
+	<bean id="policyManagementService" class="com.flf.service.impl.PolicyManagementServiceImpl">
+		<property name="policyManagementMapper" ref="policyManagementMapper"/>
+	</bean>
+    <bean id="activityManagementService" class="com.flf.service.impl.ActivityManagementServiceImpl">
+        <property name="activityManagementMapper" ref="activityManagementMapper"/>
+    </bean>
+	<bean id="dexservice" class="com.flf.service.impl.IndexServiceImpl">
+		<property name="indexMapper" ref="indexMapper"/>
+	</bean>
+	<bean id="demonstrationBaseManagementService" class="com.flf.service.impl.DemonstrationBaseServiceImpl">
+		<property name="demonstrationBaseMapper" ref="demonstrationBaseMapper"/>
+	</bean>
+	<bean id="advisesManagementService" class="com.flf.service.impl.AdvisesManagementServiceImpl">
+		<property name="advisesManagementMapper" ref="advisesManagementMapper"/>
+	</bean>
+	<bean id="comprehensiveInnovationExperimentService" class="com.flf.service.impl.ComprehensiveInnovationExperimentServiceImpl">
+		<property name="comprehensiveInnovationExperimentMapper" ref="comprehensiveInnovationExperimentMapper"/>
+	</bean>
+	<bean id="importantEmergingIndustriesService" class="com.flf.service.impl.ImportantEmergingIndustriesServiceImpl">
+		<property name="importantEmergingIndustriesMapper" ref="importantEmergingIndustriesMapper"/>
+	</bean>
+	<bean id="roleService" class="com.flf.service.impl.RoleServiceImpl">
+		<property name="roleMapper" ref="roleMapper"/>
+	</bean>
+	<bean id="menuService" class="com.flf.service.impl.MenuServiceImpl">
+		<property name="menuMapper" ref="menuMapper"/>
+	</bean>
+	<bean id="serviceDevelopmentService" class="com.flf.service.impl.ServiceDevelopmentServiceImpl">
+		<property name="serviceDevelopmentMapper" ref="serviceDevelopmentMapper"/>
+	</bean>
+	<bean id="multipartResolver"    
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">    
+        <!-- set the max upload size100MB -->    
+        <property name="maxUploadSize">    
+            <value>104857600</value>    
+        </property>    
+        <property name="maxInMemorySize">    
+            <value>4096</value>    
+        </property>   
+        <property name="defaultEncoding">  
+            <value>utf-8</value>  
+        </property>  
+    </bean> 
+</beans>

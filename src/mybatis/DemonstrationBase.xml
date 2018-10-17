@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.DemonstrationBaseMapper">
+    <!--遍历示范基地管理信息-->
+    <select id="listPageDemonstrationBaseManagement" parameterType="DemonstrationBaseManagement" resultType="DemonstrationBaseManagement">
+        select d.id id,d.name name,type,batch,r.name areaName,o.organizationName reportUnitName,releasePeople,releaseTime,modifier,modifyTime,d.sorting sorting,placedTop from tb_demonstration_base_management d,tb_organization_management o,tb_regional_data_maintenance r
+        <where>
+            r.id = d.area and d.reportUnit = o.id
+            <if test="name!=null">
+                and d.name like "%"#{name}"%"
+            </if>
+            <if test="type!=null">
+                and d.type = #{type}
+            </if>
+            <if test="batch!=null">
+                and d.batch = #{batch}
+            </if>
+            <if test="placedTop!=null">
+                and d.placedTop = #{placedTop}
+            </if>
+        </where>
+        order by d.placedTop desc, d.sorting asc
+    </select>
+    <!--删除示范基地管理信息-->
+    <delete id="deleteDemonstrationBaseManagement" parameterType="int">
+        delete from tb_demonstration_base_management where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--示范基地管理信息置顶-->
+    <update id="updateDemonstrationBaseManagementPlacedTop" parameterType="int">
+        update tb_demonstration_base_management set placedTop = 1 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--示范基地管理信息取消置顶-->
+    <update id="updateDemonstrationBaseManagementCancelPlacedTop" parameterType="int">
+        update tb_demonstration_base_management set placedTop = 0 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加示范基地管理信息-->
+    <insert id="insertDemonstrationBaseManagement" parameterType="DemonstrationBaseManagement">
+        insert into tb_demonstration_base_management (id, name, type, batch, area, reportUnit, releasePeople, releaseTime, modifier, modifyTime, sorting, placedTop, fileURL, firstTitle, firstContent, secondTitle, secondContent, thirdTitle, thirdContent, fourthTitle, fourthContent, fifthTitle, fifthContent, sixthTitle, sixthContent, seventhTitle, seventhContent, eighthTitle, ninthTitle) values (#{id},#{name},#{type},#{batch},#{area},#{reportUnit},#{releasePeople},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,#{fileURL},#{firstTitle},#{firstContent},#{secondTitle},#{secondContent},#{thirdTitle},#{thirdContent},#{fourthTitle},#{fourthContent},#{fifthTitle},#{fifthContent},#{sixthTitle},#{sixthContent},#{seventhTitle},#{seventhContent},#{eighthTitle},#{ninthTitle});
+    </insert>
+    <!--修改示范基地管理信息-->
+    <update id="updateDemonstrationBaseManagement" parameterType="DemonstrationBaseManagement">
+        update tb_demonstration_base_management set name = #{name}, type = #{type}, batch = #{batch}, area = #{area}, reportUnit = #{reportUnit}, releasePeople = #{releasePeople}, releaseTime = #{releaseTime}, modifier = #{modifier}, modifyTime = #{modifyTime}, sorting = #{sorting}, fileURL = #{fileURL}, firstTitle = #{firstTitle}, firstContent = #{firstContent}, secondTitle = #{secondTitle}, secondContent = #{secondContent}, thirdTitle = #{thirdTitle}, thirdContent = #{thirdContent}, fourthTitle = #{fourthTitle}, fourthContent = #{fourthContent}, fifthTitle = #{fifthTitle}, fifthContent = #{fifthContent}, sixthTitle = #{sixthTitle}, sixthContent = #{sixthContent}, seventhTitle = #{seventhTitle}, seventhContent = #{seventhContent}, eighthTitle = #{eighthTitle}, ninthTitle = #{ninthTitle} where id = #{id}
+    </update>
+    <!--通过id查询示范基地管理信息-->
+    <select id="selectDemonstrationBaseManagementById" parameterType="int" resultType="DemonstrationBaseManagement">
+        select * from tb_demonstration_base_management where id = #{id}
+    </select>
+    <!--通过name查询示范基地管理信息-->
+    <select id="selectDemonstrationBaseManagementByName" parameterType="java.lang.String" resultType="DemonstrationBaseManagement">
+        select * from tb_demonstration_base_management where name = #{name}
+    </select>
+
+</mapper>

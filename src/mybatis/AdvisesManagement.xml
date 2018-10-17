@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.AdvisesManagementMapper">
+    <!--遍历所有建言献策信息-->
+    <select id="listPageMakeRecommendations" resultType="MakeRecommendations" parameterType="MakeRecommendations">
+        select * from tb_make_recommendations
+        <where>
+            <if test="state!=null">
+                state = #{state}
+            </if>
+        </where>
+        order by time desc
+    </select>
+    <!--删除建言信息-->
+    <delete id="deleteMakeRecommendations" parameterType="int">
+        delete from tb_make_recommendations where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </delete>
+
+    <!--审核建言信息-->
+    <update id="updateMakeRecommendationsState" parameterType="MakeRecommendations">
+        update tb_make_recommendations set state = #{state} where id = #{id}
+    </update>
+    <!--通过id查询所有建言信息-->
+    <select id="selectMakeRecommendationsById" parameterType="int" resultType="MakeRecommendations">
+        select * from tb_make_recommendations where id = #{id}
+    </select>
+    <!--遍历建言须知信息-->
+    <select id="listPageSuggestionsAndGuidelines" resultType="SuggestionsAndGuidelines" parameterType="SuggestionsAndGuidelines">
+         select * from tb_suggestions_and_guidelines
+    </select>
+    <!--修改建言须知信息-->
+    <update id="updateSuggestionsAndGuidelines" parameterType="SuggestionsAndGuidelines">
+        update tb_suggestions_and_guidelines set content = #{content} where id = 1
+    </update>
+    <!--通过id查询建言须知信息-->
+    <select id="selectSuggestionsAndGuidelinesById" resultType="SuggestionsAndGuidelines">
+        select * from tb_suggestions_and_guidelines where id = 1
+    </select>
+
+</mapper>

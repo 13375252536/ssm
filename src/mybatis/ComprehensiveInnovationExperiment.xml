@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.ComprehensiveInnovationExperimentMapper">
+
+    <!--遍历全面创新实验信息-->
+    <select id="listPageComprehensiveInnovationExperiment" resultType="ComprehensiveInnovationExperiment" parameterType="ComprehensiveInnovationExperiment">
+        select * from tb_comprehensive_innovation_experiment
+        <where>
+            <if test="type!=null">
+              and type =  #{type}
+            </if>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除全面创新实验信息-->
+    <delete id="deleteComprehensiveInnovationExperiment" parameterType="int">
+        delete from tb_comprehensive_innovation_experiment where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--全面创新实验信息置顶-->
+    <update id="updateComprehensiveInnovationExperimentPlacedTop" parameterType="int">
+        update tb_comprehensive_innovation_experiment set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--全面创新实验信息取消置顶-->
+    <update id="updateComprehensiveInnovationExperimentCancelPlacedTop" parameterType="int">
+        update tb_comprehensive_innovation_experiment set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--全面创新实验信息发布-->
+    <update id="updateComprehensiveInnovationExperimentReportMarks" parameterType="int">
+        update tb_comprehensive_innovation_experiment set reportMarks = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--全面创新实验信息撤销发布-->
+    <update id="updateComprehensiveInnovationExperimentCancelReportMarks" parameterType="int">
+        update tb_comprehensive_innovation_experiment set reportMarks = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加全面创新实验信息-->
+    <insert id="insertComprehensiveInnovationExperiment" parameterType="ComprehensiveInnovationExperiment">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_comprehensive_innovation_experiment (type,id, name, introduction, reportDate, releaseTime, modifyTime, sorting, placedTop, reportMarks, source, content) value (#{type},#{id},#{name},#{introduction},#{reportDate},#{releaseTime},#{modifyTime},#{sorting},0,0,#{source},#{content})
+    </insert>
+    <!--修改全面创新实验信息-->
+    <update id="updateComprehensiveInnovationExperiment" parameterType="ComprehensiveInnovationExperiment">
+        update tb_comprehensive_innovation_experiment set name = #{name},introduction = #{introduction},modifyTime = #{modifyTime},sorting = #{sorting},source = #{source},content = #{content} where id = #{id}
+    </update>
+    <!--通过id查询全面创新实验信息-->
+    <select id="selectComprehensiveInnovationExperimentById" parameterType="int" resultType="ComprehensiveInnovationExperiment">
+        select * from tb_comprehensive_innovation_experiment where id =#{id}
+    </select>
+    <!--通过name查询全面创新实验信息-->
+    <select id="selectComprehensiveInnovationExperimentByName" parameterType="ComprehensiveInnovationExperiment" resultType="ComprehensiveInnovationExperiment">
+        select * from tb_comprehensive_innovation_experiment where name =#{name} and type = #{type}
+    </select>
+</mapper>

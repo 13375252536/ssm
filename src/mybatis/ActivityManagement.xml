@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.ActivityManagementMapper">
+    <!--遍历媒体管理信息-->
+    <select id="listPageMediaManagement" parameterType="MediaManagement" resultType="MediaManagement">
+        select * from tb_media_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+        order by placedTop desc, sorting asc
+    </select>
+    <!--删除媒体管理信息-->
+    <delete id="deleteMediaManagement" parameterType="int">
+        delete from tb_media_management where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--媒体管理信息置顶-->
+    <update id="updateMediaManagementPlacedTop" parameterType="int">
+        update tb_media_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--媒体管理信息取消置顶-->
+    <update id="updateMediaManagementCancelPlacedTop" parameterType="int">
+        update tb_media_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加媒体管理信息-->
+    <insert id="insertMediaManagement" parameterType="MediaManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_media_management (id,name,businessTypes,mediaType,link,sorting,placedTop,fileURL) value (#{id},#{name},#{businessTypes},#{mediaType},#{link},#{sorting},0,#{fileURL})
+    </insert>
+    <!--修改媒体管理信息-->
+    <update id="updateMediaManagement" parameterType="MediaManagement">
+       update tb_media_management set name = #{name},businessTypes = #{businessTypes},mediaType = #{mediaType},link = #{link},sorting = #{sorting},fileURL = #{fileURL} where id = #{id}
+    </update>
+    <!--通过id查询媒体管理信息-->
+    <select id="selectMediaManagementById" parameterType="int" resultType="java.util.Map">
+       select * from tb_media_management where id = #{id}
+    </select>
+    <!--遍历活动管理信息-->
+    <select id="listPageActivityManagement" parameterType="ActivityManagement" resultType="ActivityManagement">
+        select a.id id,a.name name,a.type type,r.name areaName,a.introduction introduction,o.organizationName reportUnitName,a.reportPeople reportPeople,a.reportDate reportDate,a.source source,a.releaseTime releaseTime,a.modifier modifier,a.modifyTime modifyTime,a.sorting sorting,a.placedTop placedTop,a.reportMarks reportMarks,a.fileURL fileURL,a.content content from tb_activity_management a,tb_organization_management o,tb_regional_data_maintenance r
+        <where>
+            a.area = r.id and a.reportUnit = o.id
+            <if test="name!=null">
+                and a.name like "%"#{name}"%"
+            </if>
+            <if test="type!=null">
+                and a.type = #{type}
+            </if>
+            <if test="area!=null">
+                and a.area = #{area}
+            </if>
+            <if test="reportMarks!=null">
+                and a.reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and a.placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除活动管理信息-->
+    <delete id="deleteActivityManagement" parameterType="int">
+        delete from tb_activity_management where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--活动管理信息置顶-->
+    <update id="updateActivityManagementPlacedTop" parameterType="int">
+        update tb_activity_management set placedTop = 1 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--活动管理信息取消置顶-->
+    <update id="updateActivityManagementCancelPlacedTop" parameterType="int">
+        update tb_activity_management set placedTop = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--活动管理信息撤销发布-->
+    <update id="updateActivityManagementCancelReportMarks" parameterType="int">
+        update tb_activity_management set reportMarks = 0 and placedTop = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加活动管理信息-->
+    <insert id="insertActivityManagement" parameterType="ActivityManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_activity_management (id, name, type, area, introduction, reportUnit, reportPeople, reportDate, source, releaseTime, modifier, modifyTime, sorting, placedTop, reportMarks, fileURL, content,pageView)  value (#{id},#{name},#{type},#{area},#{introduction},#{reportUnit},#{reportPeople},#{reportDate},#{source},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,1,#{fileURL},#{content},0)
+    </insert>
+    <!--修改活动管理信息-->
+    <update id="updateActivityManagement" parameterType="ActivityManagement">
+        update tb_activity_management set reportMarks = 1,name = #{name},type = #{type},area = #{area},introduction = #{introduction},reportUnit = #{reportUnit},reportDate = #{reportDate},source = #{source},modifier = #{modifier},modifyTime = #{modifyTime},sorting = #{sorting},fileURL = #{fileURL},content = #{content} where id = #{id}
+    </update>
+    <!--通过id查询活动管理信息-->
+    <select id="selectActivityManagementById" parameterType="int" resultType="ActivityManagement">
+        select * from tb_activity_management where id = #{id}
+    </select>
+    <!--查询所有区域信息-->
+    <select id="selectAreaInfo" resultType="RegionalDataMaintenance">
+        select * from tb_regional_data_maintenance
+    </select>
+    <!--查询所有机构信息-->
+    <select id="selectOrganizationInfo" resultType="OrganizationManagement">
+        select * from tb_organization_management
+    </select>
+
+    <!--遍历吉祥物管理信息-->
+    <select id="listPageMascotManagement" resultType="MascotManagement" parameterType="MascotManagement">
+        select * from tb_mascot_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+
+    <!--删除吉祥物管理信息-->
+    <delete id="deleteMascotManagement" parameterType="int">
+        delete from tb_mascot_management where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--吉祥物管理信息置顶-->
+        <update id="updateMascotManagementPlacedTop" parameterType="int">
+            update tb_mascot_management set placedTop = 1 where
+            <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+                #{chk_value}
+            </foreach>
+        </update>
+    <!--吉祥物管理信息取消置顶-->
+        <update id="updateMascotManagementCancelPlacedTop" parameterType="int">
+            update tb_mascot_management set placedTop = 0 where
+            <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+                #{chk_value}
+            </foreach>
+        </update>
+    <!--吉祥物管理信息撤回发布-->
+        <update id="updateMascotManagementCancelReportMarks" parameterType="int">
+            update tb_mascot_management set placedTop = 0,reportMarks = 0 where
+            <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+                #{chk_value}
+            </foreach>
+        </update>
+    <!--添加吉祥物管理信息-->
+        <insert id="insertMascotManagement" parameterType="MascotManagement">
+            <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+            insert into tb_mascot_management (id,name, introduction, reportPeople, reportDate, releaseTime, modifier, modifyTime, sorting, placedTop, reportMarks, content, fileURL) value (#{id},#{name},#{introduction},#{reportPeople},#{reportDate},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,1,#{content},#{fileURL})
+        </insert>
+    <!--修改吉祥物管理信息-->
+        <update id="updateMascotManagement" parameterType="MascotManagement">
+            update tb_mascot_management set reportMarks = 1,name = #{name},introduction = #{introduction},reportDate = #{reportDate},modifier = #{modifier},modifyTime = #{modifyTime},sorting = #{sorting},fileURL = #{fileURL},content = #{content} where id = #{id}
+        </update>
+    <!--通过id查询吉祥物管理信息-->
+        <select id="selectMascotManagementById" parameterType="int" resultType="MascotManagement">
+            select * from tb_mascot_management where id = #{id}
+        </select>
+    <!--遍历展厅管理信息-->
+    <select id="listPageExhibitionHallManagement" resultType="ExhibitionHallManagement" parameterType="ExhibitionHallManagement">
+        select * from tb_exhibition_hall_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除展厅管理信息-->
+    <delete id="deleteExhibitionHallManagement" parameterType="int">
+        delete from tb_exhibition_hall_management where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--展厅管理信息置顶-->
+    <update id="updateExhibitionHallManagementPlacedTop" parameterType="int">
+        update tb_exhibition_hall_management set placedTop = 1 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--展厅管理信息取消置顶-->
+    <update id="updateExhibitionHallManagementCancelPlacedTop" parameterType="int">
+        update tb_exhibition_hall_management set placedTop = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--展厅管理信息撤销发布-->
+    <update id="updateExhibitionHallManagementCancelReportMarks" parameterType="int">
+        update tb_exhibition_hall_management set reportMarks = 0, placedTop = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加展厅管理信息-->
+    <insert id="insertExhibitionHallManagement" parameterType="ExhibitionHallManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_exhibition_hall_management (id,name, introduction, reportPeople, reportDate, releaseTime, modifier, modifyTime, sorting, placedTop, reportMarks, content, fileURL) value (#{id},#{name},#{introduction},#{reportPeople},#{reportDate},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,1,#{content},#{fileURL})
+    </insert>
+    <!--修改展厅管理信息-->
+    <update id="updateExhibitionHallManagement" parameterType="ExhibitionHallManagement">
+        update tb_exhibition_hall_management set reportMarks = 1,name = #{name},introduction = #{introduction},reportDate = #{reportDate},modifier = #{modifier},modifyTime = #{modifyTime},sorting = #{sorting},content = #{content},fileURL = #{fileURL} where id = #{id}
+    </update>
+    <!--通过id查询展厅管理信息-->
+    <select id="selectExhibitionHallManagementById" parameterType="int" resultType="ExhibitionHallManagement">
+        select * from tb_exhibition_hall_management where id = #{id}
+    </select>
+    <!--遍历活动类别管理信息-->
+    <select id="listPageActivityCategoryManagement" parameterType="ActivityCategoryManagement" resultType="ActivityCategoryManagement">
+        select a.id id,a.name name,type,introduction,reportPeople,reportTime,modifier,modifyTime,initiateMode,r.name areaName,link,activityPhotosURL,bannerPhotosURL,pageViews from tb_activity_category_management a,tb_regional_data_maintenance r
+        <where>
+            and area = r.id
+            <if test="name!=null">
+                and a.name like "%"#{name}"%"
+            </if>
+            <if test="type!=null">
+                and type = #{type} 
+            </if>
+        </where>
+        order by reportTime desc 
+    </select>
+    <!--删除活动类别管理信息-->
+    <delete id="deleteActivityCategoryManagement" parameterType="int">
+        delete from tb_activity_category_management where 
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--活动类别管理信息启用-->
+    <update id="updateActivityCategoryManagementInitiateMode" parameterType="int">
+        update tb_activity_category_management set initiateMode = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--活动类别管理信息停用-->
+    <update id="updateActivityCategoryManagementCancelInitiateMode" parameterType="int">
+        update tb_activity_category_management set initiateMode = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--修改活动类别管理信息-->
+    <update id="updateActivityCategoryManagement" parameterType="ActivityCategoryManagement">
+        update tb_activity_category_management set name = #{name},type = #{type},introduction = #{introduction},modifyTime = #{modifyTime},modifier = #{modifier},area = #{area},link = #{link},activityPhotosURL = #{activityPhotosURL},bannerPhotosURL = #{bannerPhotosURL},source = #{source} where id = #{id}
+    </update>
+    <!--添加活动类别管理信息-->
+    <insert id="insertActivityCategoryManagement" parameterType="ActivityCategoryManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_activity_category_management (id,name, type, introduction, reportPeople, reportTime, modifier, modifyTime, initiateMode, area, link, activityPhotosURL, bannerPhotosURL, pageViews,source) value (#{id},#{name},#{type},#{introduction},#{reportPeople},#{reportTime},#{modifier},#{modifyTime},0,#{area},#{link},#{activityPhotosURL},#{bannerPhotosURL},#{pageViews},#{source})
+    </insert>
+    <!--通过id查询活动类别管理信息-->
+    <select id="selectActivityCategoryManagementById" parameterType="int" resultType="ActivityCategoryManagement">
+        select * from tb_activity_category_management where id = #{id}
+    </select>
+    <!--通过name查询活动类别管理信息-->
+    <select id="selectActivityCategoryManagementByName" parameterType="java.lang.String" resultType="ActivityCategoryManagement">
+        select * from tb_activity_category_management where name = #{name}
+    </select>
+    <!--遍历嘉宾管理信息-->
+    <select id="listPageGuestManagement" parameterType="GuestManagement" resultType="GuestManagement">
+        select g.id id,g.name name,type activityCategoryName,g.reportPeople reportPeople,reportDate,releaseTime,g.modifier modifier,g.modifyTime modifyTime,sorting,placedTop,reportMarks from tb_guest_management g,tb_activity_category_management a
+        <where>
+            and activityCategory = a.id
+            <if test="name!=null">
+                and g.name like "%"#{name}"%"
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+        </where>
+        order by reportMarks desc, placedTop desc, sorting asc
+    </select>
+    <!--删除嘉宾管理信息-->
+    <delete id="deleteGuestManagement" parameterType="int">
+        delete from tb_guest_management where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--嘉宾管理信息置顶-->
+    <update id="updateGuestManagementPlacedTop" parameterType="int">
+        update tb_guest_management set placedTop = 1 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--嘉宾管理信息取消置顶-->
+    <update id="updateGuestManagementCancelPlacedTop" parameterType="int">
+        update tb_guest_management set placedTop = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--嘉宾管理信息撤回发布-->
+    <update id="updateGuestManagementCancelReportMarks" parameterType="int">
+        update tb_guest_management set placedTop = 0,reportMarks = 0 where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加嘉宾管理信息-->
+    <insert id="insertGuestManagement" parameterType="GuestManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_guest_management (id,name,activityCategory,reportPeople,reportDate,releaseTime,modifier,modifyTime,sorting,placedTop,reportMarks,fileURL) value (#{id},#{name},#{activityCategory},#{reportPeople},#{reportDate},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,1,#{fileURL})
+    </insert>
+    <!--修改嘉宾管理信息-->
+    <update id="updateGuestManagement" parameterType="GuestManagement">
+        update tb_guest_management set name = #{name},activityCategory = #{activityCategory},reportDate = #{reportDate},modifier = #{modifier},modifyTime = #{modifyTime},sorting = #{sorting},reportMarks = 1,fileURL = #{fileURL} where id = #{id}
+    </update>
+    <!--通过id查询嘉宾管理信息-->
+    <select id="selectGuestManagementById" parameterType="int" resultType="GuestManagement">
+        select * from tb_guest_management where id = #{id}
+    </select>
+    <!--查询活动分类信息-->
+    <select id="selectActivityCategoryInfo" resultType="ActivityCategoryManagement">
+        select * from tb_activity_category_management
+    </select>
+    <!--通过活动管理name查询活动管理id-->
+    <select id="selectActivityManagementIdByName" parameterType="string" resultType="int">
+        select id from tb_activity_management where name = #{name};
+    </select>
+    <!--通过媒体管理name查询媒体管理id-->
+    <select id="selectMediaManagementIdByName" parameterType="string" resultType="int">
+        select id from tb_media_management where name = #{name};
+    </select>
+
+</mapper>

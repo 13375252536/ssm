@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.HomePageMapper">
+    <!--修改二维码信息-->
+    <update id="updateQrCodeManagement" parameterType="QrCodeManagement">
+            update tb_qrcode_management set qrCodeURL = #{qrCodeURL} where category = #{category}
+        </update>
+    <!--得到数据库中的二维码路径-->
+    <select id="selectURLByWeiBo" resultType="java.lang.String">
+            select qrCodeURL from tb_qrcode_management where category = "微博"
+        </select>
+    <select id="listPageImageManagement" parameterType="ImageManagement" resultType="ImageManagement">
+        select * from tb_image_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+        order by placedTop desc, sorting asc
+    </select>
+    <!--图片管理中的查询-->
+    <select id="selectURLByWeiXin" resultType="java.lang.String">
+             select qrCodeURL from tb_qrcode_management where category = "微信"
+        </select>
+    <!--通过ID删除图片管理的信息-->
+    <delete id="deleteImageManagement" parameterType="int">
+        delete from tb_image_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+
+    <!--添加图片管理信息-->
+    <insert id="insertImageManagement" parameterType="ImageManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_image_management(id, name, type, link, releasePeople, releaseTime, modifier, modifyTime, sorting,
+        placedTop,fileURL) value
+        (#{id},#{name},#{type},#{link},#{releasePeople},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,#{fileURL})
+    </insert>
+
+    <!--修改图片管理信息-->
+    <update id="updateImageManagement" parameterType="ImageManagement">
+        update tb_image_management set name = #{name},type = #{type},link = #{link},modifier = #{modifier},modifyTime = #{modifyTime},sorting = #{sorting},fileURL = #{fileURL} where id = #{id}
+    </update>
+
+    <!--通过id查询全部信息-->
+    <select id="selectImageManagementById" parameterType="int" resultType="java.util.Map">
+        select name, type, link, releasePeople, releaseTime, modifier, modifyTime, sorting, placedTop,fileURL from tb_image_management where id = #{id}
+    </select>
+
+
+    <!--图片管理信息置顶-->
+    <update id="updateImageManagementPlacedTop" parameterType="int">
+        update tb_image_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+
+    <!--图片取消置顶-->
+    <update id="updateImageManagementCancelPlacedTop" parameterType="int">
+        update tb_image_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+
+    <!--遍历创业群体维护信息-->
+    <select id="listPageEntrepreneurshipGroupMaintenance" parameterType="EntrepreneurshipGroupMaintenance"
+            resultType="EntrepreneurshipGroupMaintenance">
+        select * from tb_entrepreneurship_group_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+        order by placedTop desc, sorting asc
+    </select>
+    <!--删除创业群体维护信息-->
+    <delete id="deleteEntrepreneurshipGroupMaintenance" parameterType="int">
+        delete from tb_entrepreneurship_group_maintenance where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--置顶创业群体维护信息-->
+    <update id="updateEntrepreneurshipGroupMaintenancePlacedTop" parameterType="int">
+        update tb_entrepreneurship_group_maintenance set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--取消置顶创业群体维护信息-->
+    <update id="updateEntrepreneurshipGroupMaintenanceCancelPlacedTop" parameterType="int">
+        update tb_entrepreneurship_group_maintenance set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加创业群体维护信息-->
+    <insert id="insertEntrepreneurshipGroupMaintenance" parameterType="EntrepreneurshipGroupMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_entrepreneurship_group_maintenance
+        (id,name,releasePeople,releaseTime,modifier,modifyTime,sorting,placedTop,fileURL) value
+        (#{id},#{name},#{releasePeople},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0,#{fileURL})
+    </insert>
+    <!--修改创业群体维护-->
+    <update id="updateEntrepreneurshipGroupMaintenance" parameterType="EntrepreneurshipGroupMaintenance">
+        update tb_entrepreneurship_group_maintenance set name = #{name},sorting = #{sorting},fileURL = #{fileURL},modifier = #{modifier},modifyTime=#{modifyTime} where id = #{id}
+    </update>
+    <!--通过id获取创业群体维护信息-->
+    <select id="selectEntrepreneurshipGroupMaintenanceById" parameterType="int" resultType="java.util.Map">
+        select * from tb_entrepreneurship_group_maintenance where id = #{id}
+    </select>
+    <!--通过name查询创业群体维护信息-->
+    <select id="selectEntrepreneurshipGroupMaintenanceByName" parameterType="java.lang.String" resultType="EntrepreneurshipGroupMaintenance">
+        select * from tb_entrepreneurship_group_maintenance where name = #{name}
+    </select>
+    <!--遍历金融宣传位管理信息-->
+    <select id="listPageFinancialPositionManagement" parameterType="FinancialPositionManagement"
+            resultType="FinancialPositionManagement">
+        select * from tb_financial_position_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除金融宣传位管理信息-->
+    <delete id="deleteFinancialPositionManagement" parameterType="int">
+        delete from tb_financial_position_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--金融宣传位信息置顶-->
+    <update id="updateFinancialPositionManagementPlacedTop" parameterType="int">
+        update tb_financial_position_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--金融宣传位取消置顶-->
+    <update id="updateFinancialPositionManagementCancelPlacedTop" parameterType="int">
+        update tb_financial_position_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加金融宣传位形信息-->
+    <insert id="insertFinancialPositionManagement" parameterType="FinancialPositionManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_financial_position_management(id,name,link,`describe`,sorting,placedTop) value
+        (#{id},#{name},#{link},#{describe},${sorting},0)
+    </insert>
+    <!--修改金融宣传位信息-->
+    <update id="updateFinancialPositionManagement" parameterType="FinancialPositionManagement">
+        update tb_financial_position_management set name = #{name},sorting = #{sorting},link = #{link},`describe` = #{describe} where id = #{id}
+    </update>
+    <!--通过id查询金融宣传位管理的信息-->
+    <select id="selectFinancialPositionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_financial_position_management where id = #{id}
+    </select>
+
+    <!--遍历金融咨询管理-->
+    <select id="listPageFinancialAdvisoryManagement" parameterType="FinancialAdvisoryManagement"
+            resultType="FinancialAdvisoryManagement">
+        select * from tb_financial_advisory_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除金融咨询管理信息-->
+    <delete id="deleteFinancialAdvisoryManagement" parameterType="int">
+        delete from tb_financial_advisory_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--金融管理咨询信息置顶-->
+    <update id="updateFinancialAdvisoryManagementPlacedTop" parameterType="int">
+        update tb_financial_advisory_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--金融管理咨询信息取消置顶-->
+    <update id="updateFinancialAdvisoryManagementCancelPlacedTop" parameterType="int">
+        update tb_financial_advisory_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加金融管理咨询信息-->
+    <insert id="insertFinancialAdvisoryManagement" parameterType="FinancialAdvisoryManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_financial_advisory_management(id,name,link,type,sorting,placedTop) value
+        (#{id},#{name},#{link},#{type},#{sorting},0)
+    </insert>
+    <!--修改金融管理咨询信息-->
+    <update id="updateFinancialAdvisoryManagement" parameterType="FinancialAdvisoryManagement">
+        update tb_financial_advisory_management set name = #{name},link = #{link},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询金融管理咨询信息-->
+    <select id="selectFinancialAdvisoryManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_financial_advisory_management where id = #{id}
+    </select>
+    <!--遍历金融机构管理信息-->
+    <select id="listPageFinancialInstitutionManagement" parameterType="FinancialInstitutionManagement"
+            resultType="FinancialInstitutionManagement">
+        select * from tb_financial_institution_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除金融机构管理信息-->
+    <delete id="deleteFinancialInstitutionManagement" parameterType="int">
+        delete from tb_financial_institution_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--金融机构管理信息置顶-->
+    <update id="updateFinancialInstitutionManagementPlacedTop" parameterType="int">
+        update tb_financial_institution_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--金融机构管理信息取消置顶-->
+    <update id="updateFinancialInstitutionManagementCancelPlacedTop" parameterType="int">
+        update tb_financial_institution_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加金融机构管理信息-->
+    <insert id="insertFinancialInstitutionManagement" parameterType="FinancialInstitutionManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_financial_institution_management (id,name,link,fileURL,sorting,type,placedTop) value
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0)
+    </insert>
+    <!--修改金融机构管理信息-->
+    <update id="updateFinancialInstitutionManagement" parameterType="FinancialInstitutionManagement">
+      update tb_financial_institution_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询金融机构管理信息-->
+    <select id="selectFinancialInstitutionManagementById" resultType="java.util.Map" parameterType="int">
+        select * from tb_financial_institution_management where id = #{id}
+    </select>
+    <!--遍历技术宣传位管理信息-->
+    <select id="listPageTechnicalPositionManagement" resultType="TechnicalPositionManagement"
+            parameterType="TechnicalPositionManagement">
+        select * from tb_technical_position_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除技术宣传位管理信息-->
+    <delete id="deleteTechnicalPositionManagement" parameterType="int">
+        delete from tb_technical_position_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--技术宣传位管理信息置顶-->
+    <update id="updateTechnicalPositionManagementPlacedTop" parameterType="int">
+        update tb_technical_position_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--技术宣传位管理信息取消置顶-->
+    <update id="updateTechnicalPositionManagementCancelPlacedTop" parameterType="int">
+        update tb_technical_position_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--通过id查询技术宣传位管理信息-->
+    <select id="selectTechnicalPositionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_technical_position_management where id = #{id}
+    </select>
+    <!--添加技术宣传位管理信息-->
+    <insert id="insertTechnicalPositionManagement" parameterType="TechnicalPositionManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_technical_position_management (id,name,link,fileURL,sorting,type,placedTop) value
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0)
+    </insert>
+    <!--修改技术宣传位管理信息-->
+    <update id="updateTechnicalPositionManagement" parameterType="TechnicalPositionManagement">
+        update tb_technical_position_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting}
+    </update>
+    <!--遍历技术咨询管理信息-->
+    <select id="listPageTechnicalAdvisoryManagement" parameterType="TechnicalAdvisoryManagement"
+            resultType="TechnicalAdvisoryManagement">
+        select * from tb_technical_advisory_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除技术咨询管理信息-->
+    <delete id="deleteTechnicalAdvisoryManagement" parameterType="int">
+        delete from tb_technical_advisory_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--技术咨询管理信息置顶-->
+    <update id="updateTechnicalAdvisoryManagementPlacedTop" parameterType="int">
+        update tb_technical_advisory_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--技术咨询管理信息取消置顶-->
+    <update id="updateTechnicalAdvisoryManagementCancelPlacedTop" parameterType="int">
+        update tb_technical_advisory_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加技术咨询管理信息-->
+    <insert id="insertTechnicalAdvisoryManagement" parameterType="TechnicalAdvisoryManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_technical_advisory_management(id,name,link,type,sorting,placedTop) value
+        (#{id},#{name},#{link},#{type},#{sorting},0)
+    </insert>
+    <!--修改技术咨询管理信息-->
+    <update id="updateTechnicalAdvisoryManagement" parameterType="TechnicalAdvisoryManagement">
+        update tb_technical_advisory_management set name = #{name},link = #{link},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询技术咨询管理信息-->
+    <select id="selectTechnicalAdvisoryManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_technical_advisory_management where id = #{id}
+    </select>
+    <!--遍历技术机构管理信息-->
+    <select id="listPageTechnicalInstitutionManagement" parameterType="TechnicalInstitutionManagement"
+            resultType="TechnicalInstitutionManagement">
+        select * from tb_technical_institution_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除技术机构管理信息-->
+    <delete id="deleteTechnicalInstitutionManagement" parameterType="int">
+        delete from tb_technical_institution_management where
+        <foreach collection="array" open="id in (" close=")" separator="," item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--技术机构管理信息置顶-->
+    <update id="updateTechnicalInstitutionManagementPlacedTop" parameterType="int">
+        update tb_technical_institution_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--技术机构管理信息取消置顶-->
+    <update id="updateTechnicalInstitutionManagementCancelPlacedTop" parameterType="int">
+        update tb_technical_institution_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加技术机构管理信息-->
+    <insert id="insertTechnicalInstitutionManagement" parameterType="TechnicalInstitutionManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_technical_institution_management (id,name,link,fileURL,sorting,type,placedTop) values
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0);
+    </insert>
+    <!--修改技术机构管理信息-->
+    <update id="updateTechnicalInstitutionManagement" parameterType="TechnicalInstitutionManagement">
+        update tb_technical_institution_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询技术机构管理信息-->
+    <select id="selectTechnicalInstitutionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_technical_institution_management where id = #{id}
+    </select>
+    <!--遍历人才宣传位管理信息-->
+    <select id="listPageTalentPositionManagement" resultType="TalentPositionManagement"
+            parameterType="TalentPositionManagement">
+        select * from tb_talent_position_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除人才宣传位管理信息-->
+    <delete id="deleteTalentPositionManagement" parameterType="int">
+        delete from tb_talent_position_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--人才宣传位管理信息置顶-->
+    <update id="updateTalentPositionManagementPlacedTop" parameterType="int">
+        update tb_talent_position_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--人才宣传位管理信息取消置顶-->
+    <update id="updateTalentPositionManagementCancelPlacedTop" parameterType="int">
+        update tb_talent_position_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--通过id查询人才宣传位管理信息-->
+    <select id="selectTalentPositionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_talent_position_management where id = #{id}
+    </select>
+    <!--添加人才宣传位管理信息-->
+    <insert id="insertTalentPositionManagement" parameterType="TalentPositionManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_talent_position_management (id,name,link,fileURL,sorting,type,placedTop) value
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0)
+    </insert>
+    <!--修改人才宣传位管理信息-->
+    <update id="updateTalentPositionManagement" parameterType="TalentPositionManagement">
+        update tb_talent_position_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting}
+    </update>
+    <!--遍历人才咨询管理信息-->
+    <select id="listPageTalentAdvisoryManagement" parameterType="TalentAdvisoryManagement"
+            resultType="TalentAdvisoryManagement">
+        select * from tb_talent_advisory_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除人才咨询管理信息-->
+    <delete id="deleteTalentAdvisoryManagement" parameterType="int">
+        delete from tb_talent_advisory_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--人才咨询管理信息置顶-->
+    <update id="updateTalentAdvisoryManagementPlacedTop" parameterType="int">
+        update tb_talent_advisory_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--人才咨询管理信息取消置顶-->
+    <update id="updateTalentAdvisoryManagementCancelPlacedTop" parameterType="int">
+        update tb_talent_advisory_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加人才咨询管理信息-->
+    <insert id="insertTalentAdvisoryManagement" parameterType="TalentAdvisoryManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_talent_advisory_management(id,name,link,type,sorting,placedTop) value
+        (#{id},#{name},#{link},#{type},#{sorting},0)
+    </insert>
+    <!--修改人才咨询管理信息-->
+    <update id="updateTalentAdvisoryManagement" parameterType="TalentAdvisoryManagement">
+        update tb_talent_advisory_management set name = #{name},link = #{link},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询人才咨询管理信息-->
+    <select id="selectTalentAdvisoryManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_talent_advisory_management where id = #{id}
+    </select>
+    <!--遍历人才机构管理信息-->
+    <select id="listPageTalentInstitutionManagement" parameterType="TalentInstitutionManagement"
+            resultType="TalentInstitutionManagement">
+        select * from tb_talent_institution_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除人才机构管理信息-->
+    <delete id="deleteTalentInstitutionManagement" parameterType="int">
+        delete from tb_talent_institution_management where
+        <foreach collection="array" open="id in (" close=")" separator="," item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--人才机构管理信息置顶-->
+    <update id="updateTalentInstitutionManagementPlacedTop" parameterType="int">
+        update tb_talent_institution_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--人才机构管理信息取消置顶-->
+    <update id="updateTalentInstitutionManagementCancelPlacedTop" parameterType="int">
+        update tb_talent_institution_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加人才机构管理信息-->
+    <insert id="insertTalentInstitutionManagement" parameterType="TalentInstitutionManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_talent_institution_management (id,name,link,fileURL,sorting,type,placedTop) values
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0);
+    </insert>
+    <!--修改人才机构管理信息-->
+    <update id="updateTalentInstitutionManagement" parameterType="TalentInstitutionManagement">
+        update tb_talent_institution_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询人才机构管理信息-->
+    <select id="selectTalentInstitutionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_talent_institution_management where id = #{id}
+    </select>
+    <!--遍历场地宣传位管理信息-->
+    <select id="listPageSitePositionManagement" resultType="SitePositionManagement"
+            parameterType="SitePositionManagement">
+        select * from tb_site_position_management order by placedTop desc, sorting asc
+    </select>
+    <!--删除场地宣传位管理信息-->
+    <delete id="deleteSitePositionManagement" parameterType="int">
+        delete from tb_site_position_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--场地宣传位管理信息置顶-->
+    <update id="updateSitePositionManagementPlacedTop" parameterType="int">
+        update tb_site_position_management set placedTop = 1 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--场地宣传位管理信息取消置顶-->
+    <update id="updateSitePositionManagementCancelPlacedTop" parameterType="int">
+        update tb_site_position_management set placedTop = 0 where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--通过id查询场地宣传位管理信息-->
+    <select id="selectSitePositionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_site_position_management where id = #{id}
+    </select>
+    <!--添加场地宣传位管理信息-->
+    <insert id="insertSitePositionManagement" parameterType="SitePositionManagement">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_site_position_management (id,name,link,fileURL,sorting,type,placedTop) value
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0)
+    </insert>
+    <!--修改场地宣传位管理信息-->
+    <update id="updateSitePositionManagement" parameterType="SitePositionManagement">
+        update tb_site_position_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting}
+    </update>
+    <!--遍历场地咨询管理信息-->
+    <select id="listPageSiteAdvisoryManagement" parameterType="SiteAdvisoryManagement"
+            resultType="SiteAdvisoryManagement">
+        select * from tb_site_advisory_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除场地咨询管理信息-->
+    <delete id="deleteSiteAdvisoryManagement" parameterType="int">
+        delete from tb_site_advisory_management where
+        <foreach item="chk_value" collection="array" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--场地咨询管理信息置顶-->
+    <update id="updateSiteAdvisoryManagementPlacedTop" parameterType="int">
+        update tb_site_advisory_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--场地咨询管理信息取消置顶-->
+    <update id="updateSiteAdvisoryManagementCancelPlacedTop" parameterType="int">
+        update tb_site_advisory_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" separator="," close=")" open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加场地咨询管理信息-->
+    <insert id="insertSiteAdvisoryManagement" parameterType="SiteAdvisoryManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_site_advisory_management(id,name,link,type,sorting,placedTop) value
+        (#{id},#{name},#{link},#{type},#{sorting},0)
+    </insert>
+    <!--修改场地咨询管理信息-->
+    <update id="updateSiteAdvisoryManagement" parameterType="SiteAdvisoryManagement">
+        update tb_site_advisory_management set name = #{name},link = #{link},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询场地咨询管理信息-->
+    <select id="selectSiteAdvisoryManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_site_advisory_management where id = #{id}
+    </select>
+    <!--遍历场地机构管理信息-->
+    <select id="listPageSiteInstitutionManagement" parameterType="SiteInstitutionManagement"
+            resultType="SiteInstitutionManagement">
+        select * from tb_site_institution_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除场地机构管理信息-->
+    <delete id="deleteSiteInstitutionManagement" parameterType="int">
+        delete from tb_site_institution_management where
+        <foreach collection="array" open="id in (" close=")" separator="," item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--场地机构管理信息置顶-->
+    <update id="updateSiteInstitutionManagementPlacedTop" parameterType="int">
+        update tb_site_institution_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--场地机构管理信息取消置顶-->
+    <update id="updateSiteInstitutionManagementCancelPlacedTop" parameterType="int">
+        update tb_site_institution_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加场地机构管理信息-->
+    <insert id="insertSiteInstitutionManagement" parameterType="SiteInstitutionManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_site_institution_management (id,name,link,fileURL,sorting,type,placedTop) values
+        (#{id},#{name},#{link},#{fileURL},#{sorting},#{type},0);
+    </insert>
+    <!--修改场地机构管理信息-->
+    <update id="updateSiteInstitutionManagement" parameterType="SiteInstitutionManagement">
+        update tb_site_institution_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询场地机构管理信息-->
+    <select id="selectSiteInstitutionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_site_institution_management where id = #{id}
+    </select>
+
+
+    <!--遍历首页宣传位管理信息-->
+    <select id="listPagePositionManagement" parameterType="PositionManagement" resultType="PositionManagement">
+        select * from tb_position_management order by placedTop desc ,sorting asc
+    </select>
+    <!--删除首页宣传位管理信息-->
+    <delete id="deletePositionManagement" parameterType="int">
+        delete from tb_position_management where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--首页宣传位管理信息置顶-->
+    <update id="updatePositionManagementPlacedTop" parameterType="int">
+        update tb_position_management set placedTop = 1 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--首页宣传位管理信息取消置顶-->
+    <update id="updatePositionManagementCancelPlacedTop" parameterType="int">
+        update tb_position_management set placedTop = 0 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加首页宣传位管理信息-->
+    <insert id="insertPositionManagement" parameterType="PositionManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_position_management
+        (id,name,link,fileURL,releasePeople,releaseTime,modifier,modifyTime,sorting,placedTop) value
+        (#{id},#{name},#{link},#{fileURL},#{releasePeople},#{releaseTime},#{modifier},#{modifyTime},#{sorting},0)
+    </insert>
+    <!--修改首页宣传位管理信息-->
+    <update id="updatePositionManagement" parameterType="PositionManagement">
+        update tb_position_management set name = #{name},link = #{link},fileURL = #{fileURL},sorting = #{sorting},modifier = #{modifier},modifyTime = #{modifyTime} where id = #{id}
+    </update>
+    <!--通过id查询首页宣传位管理信息-->
+    <select id="selectPositionManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_position_management where id = #{id}
+    </select>
+    <!--遍历成果展示管理信息-->
+    <select id="listPageResultsShowManagement" parameterType="ResultsShowManagement" resultType="ResultsShowManagement">
+        select * from tb_results_show_management
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+            <if test="releaseMarks!=null">
+                and releaseMarks = #{releaseMarks}
+            </if>
+        </where>
+        order by placedTop desc, sorting asc
+    </select>
+    <!--删除成果展示管理信息-->
+    <delete id="deleteResultsShowManagement" parameterType="int">
+        delete from tb_results_show_management where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--成果展示管理信息置顶-->
+    <update id="updateResultsShowManagementPlacedTop" parameterType="int">
+        update tb_results_show_management set placedTop = 1 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--成果展示管理信息取消置顶-->
+    <update id="updateResultsShowManagementCancelPlacedTop" parameterType="int">
+        update tb_results_show_management set placedTop = 0 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--成果展示管理信息发布-->
+    <update id="updateResultsShowManagementReleaseMarks" parameterType="int">
+        update tb_results_show_management set releaseMarks = 1 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--成果展示管理信息撤销发布-->
+    <update id="updateResultsShowManagementCancelReleaseMarks" parameterType="int">
+        update tb_results_show_management set releaseMarks = 0,placedTop = 0 where
+        <foreach collection="array" separator="," open="id in (" close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加成果展示管理信息-->
+    <insert id="insertResultsShowManagement" parameterType="ResultsShowManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_results_show_management (id,name, reportTime, releaseTime, sorting, releaseMarks,
+        placedTop,content) value (#{id},#{name},#{reportTime},#{releaseTime},#{sorting},0,0,#{content})
+    </insert>
+    <!--修改成果展示管理信息-->
+    <update id="updateResultsShowManagement" parameterType="ResultsShowManagement">
+        update tb_results_show_management set name = #{name},reportTime = #{reportTime},sorting = #{sorting},content = #{content} where id = #{id}
+    </update>
+    <!--通过id查询成果展示管理信息-->
+    <select id="selectResultsShowManagementById" parameterType="int" resultType="java.util.Map">
+        select * from tb_results_show_management where id = #{id}
+    </select>
+    <!--遍历动态管理信息-->
+    <select id="listPageDynamicManagement" parameterType="DynamicManagement" resultType="DynamicManagement">
+        select d.id id,d.name name,introduction,organizationName releaseUnitName,reportDate,d.releaseTime releaseTime,d.sorting sorting,releaseMarks,d.placedTop placedTop,leadershipTag from tb_dynamic_management d left join tb_organization_management o on d.releaseUnit = o.id
+        <where>
+            <if test="name!=null and name!=''">
+                and d.name like "%"#{name}"%"
+            </if>
+            <if test="placedTop!=null">
+                and d.placedTop = #{placedTop}
+            </if>
+            <if test="releaseMarks!=null">
+                and d.releaseMarks = #{releaseMarks}
+            </if>
+            <if test="releaseTimeStart!=null">
+                and d.releaseTime>=#{releaseTimeStart}
+            </if>
+            <if test="releaseTimeEnd!=null">
+                and d.releaseTime&lt;=#{releaseTimeEnd}
+            </if>
+        </where>
+        order by d.placedTop desc, d.sorting asc
+    </select>
+    <!--删除动态管理信息-->
+    <delete id="deleteDynamicManagement" parameterType="int">
+        delete from tb_dynamic_management where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--动态管理信息置顶-->
+    <update id="updateDynamicManagementPlacedTop" parameterType="int">
+        update tb_dynamic_management set placedTop = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--动态管理信息取消置顶-->
+    <update id="updateDynamicManagementCancelPlacedTop" parameterType="int">
+        update tb_dynamic_management set placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--动态管理信息发布-->
+    <update id="updateDynamicManagementReleaseMarks" parameterType="int">
+        update tb_dynamic_management set releaseMarks = 1 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--动态管理信息取消发布-->
+    <update id="updateDynamicManagementCancelReleaseMarks" parameterType="int">
+        update tb_dynamic_management set releaseMarks = 0,placedTop = 0 where
+        <foreach collection="array" item="chk_value" open="id in (" separator="," close=")">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加动态管理信息-->
+    <insert id="insertDynamicManagement" parameterType="DynamicManagement">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_dynamic_management (id,name, introduction, releaseUnit, reportDate, releaseTime, sorting, releaseMarks, placedTop, leadershipTag, fileURL, content, source, dynamicClassification,base, region, socialGroups,pageViews) value (#{id},#{name},#{introduction},#{releaseUnit},#{reportDate},#{releaseTime},#{sorting},0,0,#{leadershipTag},#{fileURL},#{content},#{source},#{dynamicClassification},#{base},#{region},#{socialGroups},0)
+    </insert>
+    <!--修改动态管理信息-->
+    <update id="updateDynamicManagement" parameterType="DynamicManagement">
+        update tb_dynamic_management set name = #{name},introduction = #{introduction},releaseUnit = #{releaseUnit},reportDate = #{reportDate},sorting = #{sorting},leadershipTag = #{leadershipTag},fileURL = #{fileURL},content = #{content},source = #{source},dynamicClassification = #{dynamicClassification},base = #{base},region = #{region},socialGroups = #{socialGroups} where id = #{id}
+    </update>
+    <!--通过id查询动态管理信息-->
+    <select id="selectDynamicManagementById" parameterType="int" resultType="DynamicManagement">
+        select * from tb_dynamic_management where id = #{id}
+    </select>
+    <!--查询所有机构-->
+    <select id="selectOrganizationInfo" resultType="OrganizationManagement">
+        select * from tb_organization_management
+    </select>
+    <!--查询所有基地-->
+    <select id="selectBaseInfo" resultType="DemonstrationBaseManagement">
+        select * from tb_demonstration_base_management
+    </select>
+    <!--通过区域id查询基地信息-->
+    <select id="selectBaseIdByRegionId" resultType="DemonstrationBaseManagement" parameterType="int">
+        select * from tb_demonstration_base_management where area = #{region}
+    </select>
+    <!--通过基地id查询区域id-->
+    <select id="selectRegionIdByBaseId" resultType="RegionalDataMaintenance" parameterType="int">
+        select r.id id,r.name name from tb_demonstration_base_management d,tb_regional_data_maintenance r where d.id = #{base} and r.id = d.area
+    </select>
+    <!--通过动态name查询id-->
+    <select id="selectDynamicManagementIdByName" parameterType="string" resultType="int">
+        select id from tb_dynamic_management where name = #{name};
+    </select>
+</mapper>

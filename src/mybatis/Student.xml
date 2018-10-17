@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.StudentMapper">
+
+    <!--插入学生数据-->
+    <insert id="insertStudent" parameterType="Student">
+        <selectKey resultType="int" keyProperty="id" order="AFTER"> SELECT LAST_INSERT_ID() </selectKey>
+        insert into tb_student (id,sno,portrait,name,age,gender,grade,idNum) value (#{id},#{sno},#{portrait},#{name},#{age},#{gender},#{grade},#{idNum})
+    </insert>
+    <!--修改学生数据-->
+    <update id="updateStudent" parameterType="Student">
+        update tb_student set sno = #{sno},portrait = #{portrait},name = #{name},age = #{age},gender = #{gender},grade = #{grade},idNum = #{idNum} where id = #{id}
+    </update>
+    <!--查询学生数据-->
+    <select id="listPageStudent" parameterType="Student" resultType="Student">
+        select id,sno,portrait,name,age,gender,grade,idNum from tb_student
+        <where>
+            <if test="name!=null and name!=''">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="sno!=null and sno!=''">
+                and sno = #{sno}
+            </if>
+            <if test="age!=null and age!=''">
+                and age = #{age}
+            </if>
+            <if test="gender!=null and gender!=''">
+                and gender = #{gender}
+            </if>
+            <if test="grade!=null and grade!=''">
+                and grade = #{grade}
+            </if>
+            <if test="idNum!=null and idNum!=''">
+                and idNum = #{idNum}
+            </if>
+        </where>
+    </select>
+    <!--通过学生数据库的主键序号 删除学生信息-->
+    <delete id="deleteStudent" parameterType="int">
+		delete from tb_student where id = #{id}
+  </delete>
+
+    <!--查询性别的种类-->
+    <select id="selectGender" resultType="java.lang.String">
+        select distinct gender from tb_student
+    </select>
+
+    <!--查询年级的种类-->
+    <select id="selectGrade" resultType="java.lang.String">
+        select distinct grade from tb_student
+    </select>
+
+    <!--通过学生学号查询学生信息-->
+    <select id="selectStudentBySno" parameterType="java.lang.String" resultType="java.util.Map">
+        select * from tb_student where sno = #{sno}
+    </select>
+    <!--通过学生身份证查询学生信息-->
+    <select id="selectStudentByIdNum" parameterType="java.lang.String" resultType="java.util.Map">
+        select * from tb_student where idNum = #{idNum}
+    </select>
+    <!--通过id查询学生信息-->
+    <select id="selectStudentById" parameterType="int" resultType="java.util.Map">
+        select * from tb_student where id = #{id}
+    </select>
+    <!--通过id将某人portrait变为null-->
+    <update id="deletePortrait" parameterType="int">
+        update tb_student set portrait = "" where id = #{id}
+    </update>
+    <!--通过id得到某人portrait-->
+    <select id="getPortrait" parameterType="int" resultType="java.lang.String">
+        select portrait from tb_student where id = #{id}
+    </select>
+</mapper>

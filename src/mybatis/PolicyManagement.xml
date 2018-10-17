@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flf.mapper.PolicyManagementMapper">
+    <!--遍历生态圈维护信息-->
+    <select id="listPageEcosystemMaintenance" parameterType="EcosystemMaintenance" resultType="EcosystemMaintenance">
+        select * from tb_ecosystem_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除生态圈数据维护信息-->
+    <delete id="deleteEcosystemMaintenance" parameterType="int">
+        delete from tb_ecosystem_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加生态圈维护信息-->
+    <insert id="insertEcosystemMaintenance" parameterType="EcosystemMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_ecosystem_maintenance(id,name) value (#{id},#{name})
+    </insert>
+    <!--修改生态圈数据维护信息-->
+    <update id="updateEcosystemMaintenance" parameterType="EcosystemMaintenance">
+        update tb_ecosystem_maintenance set name = #{name} where id = #{id}
+    </update>
+    <!--通过id查询区域数据维护信息-->
+    <select id="selectEcosystemMaintenanceById" parameterType="int" resultType="EcosystemMaintenance">
+        select * from tb_ecosystem_maintenance where id = #{id}
+    </select>
+    <!--查询生态圈名称是否重复-->
+    <select id="selectEcosystemMaintenanceByName" parameterType="EcosystemMaintenance" resultType="EcosystemMaintenance">
+        select id from tb_ecosystem_maintenance where name = #{name}
+    </select>
+    <!--遍历时间轴维护信息-->
+    <select id="listPageTimelineMaintenance" parameterType="TimelineMaintenance" resultType="TimelineMaintenance">
+        select * from tb_timeline_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除时间轴维护信息-->
+    <delete id="deleteTimelineMaintenance" parameterType="int">
+        delete from tb_timeline_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加时间轴维护信息-->
+    <insert id="insertTimelineMaintenance" parameterType="TimelineMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_timeline_maintenance(id,name) value (#{id},#{name})
+    </insert>
+    <!--修改时间轴维护信息-->
+    <update id="updateTimelineMaintenance" parameterType="TimelineMaintenance">
+        update tb_timeline_maintenance set name = #{name} where id = #{id}
+    </update>
+    <!--通过id查询时间轴维护信息-->
+    <select id="selectTimelineMaintenanceById" parameterType="int" resultType="TimelineMaintenance">
+        select * from tb_timeline_maintenance where id = #{id}
+    </select>
+    <!--查询时间轴名称是否重复-->
+    <select id="selectTimelineMaintenanceByName" parameterType="TimelineMaintenance" resultType="TimelineMaintenance">
+        select id from tb_timeline_maintenance where name = #{name}
+    </select>
+    <!--遍历行业数据维护信息-->
+    <select id="listPageIndustryDataMaintenance" parameterType="IndustryDataMaintenance" resultType="IndustryDataMaintenance">
+        select * from tb_industry_data_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除行业数据维护信息-->
+    <delete id="deleteIndustryDataMaintenance" parameterType="int">
+        delete from tb_industry_data_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加行业数据维护信息-->
+    <insert id="insertIndustryDataMaintenance" parameterType="IndustryDataMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_industry_data_maintenance(id,name) value (#{id},#{name})
+    </insert>
+    <!--修改行业数据维护信息-->
+    <update id="updateIndustryDataMaintenance" parameterType="IndustryDataMaintenance">
+        update tb_industry_data_maintenance set name = #{name} where id = #{id}
+    </update>
+    <!--通过id查询行业数据维护信息-->
+    <select id="selectIndustryDataMaintenanceById" parameterType="int" resultType="IndustryDataMaintenance">
+        select * from tb_industry_data_maintenance where id = #{id}
+    </select>
+    <!--查询行业数据名称是否重复-->
+    <select id="selectIndustryDataMaintenanceByName" parameterType="IndustryDataMaintenance" resultType="IndustryDataMaintenance">
+        select id from tb_industry_data_maintenance where name = #{name}
+    </select>
+    <!--遍历区域数据维护信息-->
+    <select id="listPageRegionalDataMaintenance" resultType="RegionalDataMaintenance">
+        select * from tb_regional_data_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除区域数据维护信息-->
+    <delete id="deleteRegionalDataMaintenance" parameterType="int">
+        delete from tb_regional_data_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加区域数据维护信息-->
+    <insert id="insertRegionalDataMaintenance" parameterType="RegionalDataMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_regional_data_maintenance(id,name,sorting) value (#{id},#{name},#{sorting})
+    </insert>
+    <!--修改区域数据维护信息-->
+    <update id="updateRegionalDataMaintenance" parameterType="RegionalDataMaintenance">
+        update tb_regional_data_maintenance set name = #{name},sorting = #{sorting} where id = #{id}
+    </update>
+    <!--通过id查询区域数据维护信息-->
+    <select id="selectRegionalDataMaintenanceById" parameterType="int" resultType="java.util.Map">
+        select * from tb_regional_data_maintenance where id = #{id}
+    </select>
+    <!--查询某区域名称是否重复-->
+    <select id="selectNameCheckInfo" parameterType="RegionalDataMaintenance" resultType="RegionalDataMaintenance">
+        select id from tb_regional_data_maintenance where name = #{name}
+    </select>
+    <!--遍历主题分类维护信息-->
+    <select id="listPageSubjectClassificationMaintenance" parameterType="SubjectClassificationMaintenance" resultType="SubjectClassificationMaintenance">
+        select * from tb_subject_classification_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除主题分类维护信息-->
+    <delete id="deleteSubjectClassificationMaintenance" parameterType="int">
+        delete from tb_subject_classification_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加主题分类维护信息-->
+    <insert id="insertSubjectClassificationMaintenance" parameterType="SubjectClassificationMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_subject_classification_maintenance(id,name) value (#{id},#{name})
+    </insert>
+    <!--修改主题分类维护信息-->
+    <update id="updateSubjectClassificationMaintenance" parameterType="SubjectClassificationMaintenance">
+        update tb_subject_classification_maintenance set name = #{name} where id = #{id}
+    </update>
+    <!--通过id查询主题分类维护信息-->
+    <select id="selectSubjectClassificationMaintenanceById" parameterType="int" resultType="SubjectClassificationMaintenance">
+        select * from tb_subject_classification_maintenance where id = #{id}
+    </select>
+    <!--查询主题分类名称是否重复-->
+    <select id="selectSubjectClassificationMaintenanceByName" parameterType="SubjectClassificationMaintenance" resultType="SubjectClassificationMaintenance">
+        select id from tb_subject_classification_maintenance where name = #{name}
+    </select>
+    <!--遍历政策分类维护信息-->
+    <select id="listPagePolicyClassificationMaintenance" parameterType="PolicyClassificationMaintenance" resultType="PolicyClassificationMaintenance">
+        select * from tb_policy_classification_maintenance
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+    <!--删除政策分类维护信息-->
+    <delete id="deletePolicyClassificationMaintenance" parameterType="int">
+        delete from tb_policy_classification_maintenance where
+        <foreach collection="array" close=")" separator="," open="id in (" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--添加政策分类维护信息-->
+    <insert id="insertPolicyClassificationMaintenance" parameterType="PolicyClassificationMaintenance">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_policy_classification_maintenance(id,name) value (#{id},#{name})
+    </insert>
+    <!--修改政策分类维护信息-->
+    <update id="updatePolicyClassificationMaintenance" parameterType="PolicyClassificationMaintenance">
+        update tb_policy_classification_maintenance set name = #{name} where id = #{id}
+    </update>
+    <!--通过id查询政策分类维护信息-->
+    <select id="selectPolicyClassificationMaintenanceById" parameterType="int" resultType="PolicyClassificationMaintenance">
+        select * from tb_policy_classification_maintenance where id = #{id}
+    </select>
+    <!--查询政策分类名称是否重复-->
+    <select id="selectPolicyClassificationMaintenanceByName" parameterType="PolicyClassificationMaintenance" resultType="PolicyClassificationMaintenance">
+        select id from tb_policy_classification_maintenance where name = #{name}
+    </select>
+    <!--遍历产业园推荐信息-->
+    <select id="listPageIndustrialParkRecommendation" resultType="IndustrialParkRecommendation" parameterType="IndustrialParkRecommendation">
+        select * from tb_industrial_park_recommendation
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+        </where>
+        order by placedTop desc, sorting asc
+    </select>
+    <!--删除产业园推荐信息-->
+    <delete id="deleteIndustrialParkRecommendation" parameterType="int">
+        delete from tb_industrial_park_recommendation where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--产业园推荐信息置顶-->
+    <update id="updateIndustrialParkRecommendationPlacedTop" parameterType="int">
+        update tb_industrial_park_recommendation set placedTop = 1 where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--产业园推荐信息取消置顶-->
+    <update id="updateIndustrialParkRecommendationCancelPlacedTop" parameterType="int">
+        update tb_industrial_park_recommendation set placedTop = 0 where
+        <foreach collection="array" item="chk_value" close=")" separator="," open="id in (">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加产业园推荐信息-->
+    <insert id="insertIndustrialParkRecommendation" parameterType="IndustrialParkRecommendation">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+        insert into tb_industrial_park_recommendation (id, name, link, sorting, placedTop, fileURL) value (#{id},#{name},#{link},#{sorting},0,#{fileURL})
+    </insert>
+    <!--修改产业园推荐信息-->
+    <update id="updateIndustrialParkRecommendation" parameterType="IndustrialParkRecommendation">
+        update tb_industrial_park_recommendation set name = #{name},link = #{link},sorting = #{sorting},fileURL = #{fileURL}
+    </update>
+    <!--通过id查询产业园推荐信息-->
+    <select id="selectIndustrialParkRecommendationById" parameterType="int" resultType="IndustrialParkRecommendation">
+        select * from tb_industrial_park_recommendation where id = #{id}
+    </select>
+    <!--通过name查询产业园推荐信息-->
+    <select id="selectIndustrialParkRecommendationByName" parameterType="java.lang.String" resultType="IndustrialParkRecommendation">
+         select * from tb_industrial_park_recommendation where name = #{name}
+    </select>
+    <!--遍历查询所有政策发布信息-->
+    <select id="listPagePolicyIssued" parameterType="PolicyIssued" resultType="PolicyIssued">
+        select * from tb_policy_issued
+        <where>
+            <if test="name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="postShopName!=null">
+                and postShopName like "%"#{postShopName}"%"
+            </if>
+            <if test="region!=null and region!=''">
+                and region = #{region}
+            </if>
+            <if test="placedTop!=null">
+                and placedTop = #{placedTop}
+            </if>
+            <if test="industry!=null and industry!=''">
+                and industry = #{industry}
+            </if>
+            <if test="policyTheme!=null and policyTheme!=''">
+                and policyTheme = #{policyTheme}
+            </if>
+            <if test="reportUnit!=null and reportUnit!=''">
+                and reportUnit = #{reportUnit}
+            </if>
+            <if test="reportMarks!=null">
+                and reportMarks = #{reportMarks}
+            </if>
+            <if test="reportDateStart!=null">
+                and reportDate &gt;= #{reportDateStart}
+            </if>
+            <if test="reportDateEnd!=null">
+                and reportDate &lt;= #{reportDateEnd}
+            </if>
+        </where>
+        order by placedTop desc, sorting asc, reportDate desc
+    </select>
+    <!--删除政策发布信息-->
+    <delete id="deletePolicyIssued" parameterType="int">
+        delete from tb_policy_issued where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </delete>
+    <!--政策发布信息置顶-->
+    <update id="updatePolicyIssuedPlacedTop" parameterType="int">
+        update tb_policy_issued set placedTop = 1 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--政策发布信息取消置顶-->
+    <update id="updatePolicyIssuedCancelPlacedTop" parameterType="int">
+        update tb_policy_issued set placedTop = 0 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--政策发布信息撤销发布-->
+    <update id="updatePolicyIssuedCancelReportMarks" parameterType="int">
+        update tb_policy_issued set placedTop = 0 and reportMarks = 0 where
+        <foreach collection="array" open="id in (" separator="," close=")" item="chk_value">
+            #{chk_value}
+        </foreach>
+    </update>
+    <!--添加政策发布信息-->
+    <insert id="insertPolicyIssued" parameterType="PolicyIssued">
+        insert into tb_policy_issued (name, postShopName, reportUnit, reportPeople, reportDate, modifyTime, policyTheme, ecosphereKeyword, timelinePhase, policyIs, region, businessPeople, industry, innovationService, sorting, placedTop, reportMarks, content, fileURL, policyIntroduction, interviewVideoFileURL, interviewGuest, interviewDate, interviewIntroduction,policyClassification,pageView,weeklyPageView,monthlyPageView,quarterPageView,annualPageView) values (#{name},#{postShopName},#{reportUnit},#{reportPeople},#{reportDate},#{modifyTime},#{policyTheme},#{ecosphereKeyword},#{timelinePhase},#{policyIs},#{region},#{businessPeople},#{industry},#{innovationService},#{sorting},0,1,#{content},#{fileURL},#{policyIntroduction},#{interviewVideoFileURL},#{interviewGuest},#{interviewDate},#{interviewIntroduction},#{policyClassification},0,0,0,0,0);
+    </insert>
+    <!--修改政策发布信息-->
+    <update id="updatePolicyIssued" parameterType="PolicyIssued">
+        update tb_policy_issued set name = #{name},postShopName = #{postShopName},reportUnit = #{reportUnit},reportDate = #{reportDate},modifyTime = #{modifyTime},policyTheme = #{policyTheme},ecosphereKeyword = #{ecosphereKeyword},timelinePhase = #{timelinePhase},policyIs = #{policyIs},region = #{region},businessPeople = #{businessPeople},industry = #{industry},innovationService = #{innovationService},sorting = #{sorting},content = #{content},fileURL = #{fileURL},policyIntroduction = #{policyIntroduction},interviewVideoFileURL = #{interviewVideoFileURL},interviewGuest = #{interviewGuest},interviewDate = #{interviewDate},interviewIntroduction = #{interviewIntroduction},policyClassification = #{policyClassification} where id = #{id}
+    </update>
+    <!--通过id查询政策发布信息-->
+    <select id="selectPolicyIssuedById" parameterType="int" resultType="PolicyIssued">
+        select * from tb_policy_issued where id = #{id}
+    </select>
+    <!--通过政策管理name查询政策管理id-->
+    <select id="selectPolicyIssuedIdByName" parameterType="string" resultType="int">
+        select id from tb_policy_issued where name = #{name};
+    </select>
+    <!--所属机构-->
+    <select id="selectReportUnit" resultType="OrganizationManagement">
+        select * from tb_organization_management
+    </select>
+    <!--区域-->
+    <select id="selectRegion" resultType="RegionalDataMaintenance">
+        select * from tb_regional_data_maintenance
+    </select>
+    <!--生态圈-->
+    <select id="selectEcosphereKeyword" resultType="EcosystemMaintenance">
+        select * from tb_ecosystem_maintenance
+    </select>
+    <!--主题-->
+    <select id="selectPolicyTheme" resultType="SubjectClassificationMaintenance">
+        select * from tb_subject_classification_maintenance
+    </select>
+    <!--时间轴-->
+    <select id="selectTimelinePhase" resultType="TimelineMaintenance">
+        select * from tb_timeline_maintenance
+    </select>
+    <!--创业人群-->
+    <select id="selectBusinessPeople" resultType="EntrepreneurshipGroupMaintenance">
+        select * from tb_entrepreneurship_group_maintenance
+    </select>
+    <!--政策分类-->
+    <select id="selectPolicyClassification" resultType="PolicyClassificationMaintenance">
+        select * from tb_policy_classification_maintenance
+    </select>
+    <!--行业-->
+    <select id="selectIndustry" resultType="IndustryDataMaintenance">
+        select * from tb_industry_data_maintenance
+    </select>
+</mapper>
